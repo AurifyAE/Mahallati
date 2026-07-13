@@ -268,7 +268,7 @@ function TvScreen() {
           padding="1vw"
           gap="1vw"
         >
-          
+
           <Box
             sx={{
               height: "auto",
@@ -278,7 +278,7 @@ function TvScreen() {
           >
             <img src={mainLogo} alt="" className="object-contain w-full" />
           </Box>
-        <SpotRate />
+          <SpotRate />
         </Grid>
 
 
