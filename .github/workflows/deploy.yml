@@ -1,4 +1,4 @@
-name: Deploy Afsom Screen
+name: Deploy Mahallati Screen
 
 on:
   push:
@@ -31,16 +31,16 @@ jobs:
           VITE_APP_ADMIN_ID: ${{ secrets.VITE_APP_ADMIN_ID }}
           VITE_APP_SOCKET_SECRET_KEY: ${{ secrets.VITE_APP_SOCKET_SECRET_KEY }}
 
-      # 4. Prepare Afsom folder
-      - name: Prepare Afsom folder
+      # 4. Prepare Mahallati folder
+      - name: Prepare Mahallati folder
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo mkdir -p /var/www/html/TV_Screens/Afsom
-            sudo chown -R ubuntu:ubuntu /var/www/html/TV_Screens/Afsom
+            sudo mkdir -p /var/www/html/TV_Screens/Mahallati
+            sudo chown -R ubuntu:ubuntu /var/www/html/TV_Screens/Mahallati
 
       # 5. Upload new build
       - name: Upload build files
@@ -50,7 +50,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "dist/*"
-          target: "/var/www/html/TV_Screens/Afsom"
+          target: "/var/www/html/TV_Screens/Mahallati"
           strip_components: 1
 
       # 6. Fix permissions
@@ -61,8 +61,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo find /var/www/html/TV_Screens/Afsom -type d -exec chmod 755 {} \;
-            sudo find /var/www/html/TV_Screens/Afsom -type f -exec chmod 644 {} \;
+            sudo find /var/www/html/TV_Screens/Mahallati -type d -exec chmod 755 {} \;
+            sudo find /var/www/html/TV_Screens/Mahallati -type f -exec chmod 644 {} \;
 
       # 7. Reload Nginx
       - name: Reload Nginx
