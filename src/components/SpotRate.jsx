@@ -168,13 +168,15 @@ const SpotRate = () => {
     const isSilver = theme === "silver";
 
     let title = "GOLD";
-    let gradient = "linear-gradient(90deg, #FFF098)";
-    let shadow = "0 0 3vw rgba(255 217 0 / 0.11) inset";
+    let panelBg = "linear-gradient(135deg, rgba(20, 16, 12, 0.85) 0%, rgba(32, 26, 18, 0.9) 50%, rgba(15, 12, 9, 0.85) 100%)";
+    let panelBorder = "0.12vw solid rgba(218, 165, 32, 0.35)";
+    let panelShadow = "inset 0 0 1.5vw rgba(218, 165, 32, 0.1), 0 0.8vw 2vw rgba(0, 0, 0, 0.5)";
 
     if (isSilver) {
       title = "SILVER";
-      gradient = "linear-gradient(90deg, #FFFFFF )";
-      shadow = "0 0 3vw rgba(160,180,255,0.15) inset";
+      panelBg = "linear-gradient(135deg, rgba(12, 16, 24, 0.85) 0%, rgba(22, 28, 38, 0.9) 50%, rgba(10, 12, 18, 0.85) 100%)";
+      panelBorder = "0.12vw solid rgba(192, 192, 192, 0.35)";
+      panelShadow = "inset 0 0 1.5vw rgba(192, 192, 192, 0.15), 0 0.8vw 2vw rgba(0, 0, 0, 0.5)";
     }
 
     return (
@@ -182,59 +184,20 @@ const SpotRate = () => {
         sx={{
           position: "relative",
           overflow: "hidden",
-
           borderRadius: "1.8vw",
-
           backdropFilter: "blur(0.8vw)",
-
-          background: "linear-gradient(135deg, rgba(10, 25, 50, 0.65) 0%, rgba(16, 42, 82, 0.75) 50%, rgba(8, 20, 43, 0.65) 100%)",
-          border: "0.18vw solid rgba(135, 206, 250, 0.25)",
-          boxShadow: "inset 0 0 2vw rgba(0, 191, 255, 0.08), 0 0.8vw 2.4vw rgba(0, 0, 0, 0.4)",
+          background: panelBg,
+          border: panelBorder,
+          boxShadow: panelShadow,
           padding: {
             xs: "2vw 3vw",
             sm: "0.5vw 2vw",
             md: "1.5vw 1vw",
           },
-
           display: "grid",
           alignItems: "center",
           gap: "1vw",
           gridTemplateColumns: ".7fr 1fr 1fr",
-
-
-
-
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-
-            padding: "0.08vw", // border thickness
-            borderRadius: "inherit",
-
-            background: `
-      linear-gradient(
-        150deg,
-        rgba(173, 216, 230, 0.35) 0%,
-        rgba(255, 255, 255, 0.45) 35%,
-        rgba(0, 119, 255, 0.3) 70%,
-        rgba(135, 206, 250, 0.4) 100%
-      )
-    `,
-
-            WebkitMask: `
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0)
-    `,
-
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-
-            pointerEvents: "none",
-          }
-
-
-
         }}
       >
         <Box
@@ -246,10 +209,12 @@ const SpotRate = () => {
           }}
         >
           <Box
+            className="animate-float"
             sx={{
               width: "4.5vw",
               height: "4.5vw",
               objectFit: "contain",
+              filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
             component='img'
             src={isSilver ? '/images/silver-bar.png' : '/images/gold-bar.png'}
