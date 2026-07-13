@@ -157,11 +157,34 @@ const CommodityTable = ({ title, items }) => {
             "linear-gradient(180deg, rgba(10, 25, 50, 0.65) 0%, rgba(6, 18, 38, 0.55) 100%)",
           backdropFilter: "blur(0.35vw)",
           border: "0.1vw solid rgba(135, 206, 250, 0.25)",
-
           boxShadow: `
-  inset 0 0 0.08vw rgba(255,255,255,0.15),
-  0 0 0.8vw rgba(0,191,255,0.08)
-`,
+            inset 0 0 0.08vw rgba(255,255,255,0.15),
+            0 0 0.8vw rgba(0,191,255,0.08)
+          `,
+          position: "relative",
+
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            padding: "0.08vw", // border thickness
+            borderRadius: "inherit",
+            background: `
+              linear-gradient(
+                135deg,
+                rgba(255, 223, 0, 0.35) 0%,
+                rgba(255, 255, 255, 0.45) 50%,
+                rgba(192, 192, 192, 0.35) 100%
+              )
+            `,
+            WebkitMask: `
+              linear-gradient(#fff 0 0) content-box,
+              linear-gradient(#fff 0 0)
+            `,
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            pointerEvents: "none",
+          }
         }}
       >
         <Typography
@@ -173,7 +196,7 @@ const CommodityTable = ({ title, items }) => {
               xl: "1.3vw",
             },
             fontWeight: 600,
-            color: "#fff",
+            color: "rgba(255, 255, 255, 0.5)",
             letterSpacing: "0.04vw",
             textAlign: "start",
           }}
@@ -190,7 +213,7 @@ const CommodityTable = ({ title, items }) => {
               xl: "1.3vw",
             },
             fontWeight: 600,
-            color: "#fff",
+            color: "rgba(255, 255, 255, 0.5)",
             textAlign: "start",
           }}
         >
@@ -204,8 +227,8 @@ const CommodityTable = ({ title, items }) => {
               lg: "1.2vw",
               xl: "1.3vw",
             },
-            fontWeight: 600,
-            color: "#fff",
+            fontWeight: 650,
+            color: "#E5C583", // Champagne Gold
             textAlign: "center",
           }}
         >
@@ -220,8 +243,8 @@ const CommodityTable = ({ title, items }) => {
               lg: "1.2vw",
               xl: "1.3vw",
             },
-            fontWeight: 600,
-            color: "#fff",
+            fontWeight: 650,
+            color: "#BAC8D9", // Platinum Silver
             textAlign: "center",
           }}
         >
@@ -233,6 +256,41 @@ const CommodityTable = ({ title, items }) => {
         sx={{
           mt: "1vw",
           maxHeight: { xs: "auto", sm: "20vw" },
+          borderRadius: "1vw",
+          margin: ".4vw",
+          background:
+            "linear-gradient(180deg, rgba(10, 25, 50, 0.65) 0%, rgba(6, 18, 38, 0.55) 100%)",
+          backdropFilter: "blur(0.35vw)",
+          border: "0.1vw solid rgba(135, 206, 250, 0.25)",
+          boxShadow: `
+            inset 0 0 0.08vw rgba(255,255,255,0.15),
+            0 0 0.8vw rgba(0,191,255,0.08)
+          `,
+          position: "relative",
+          overflow: "visible",
+
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            padding: "0.08vw", // border thickness
+            borderRadius: "inherit",
+            background: `
+              linear-gradient(
+                135deg,
+                rgba(255, 223, 0, 0.35) 0%,
+                rgba(255, 255, 255, 0.45) 50%,
+                rgba(192, 192, 192, 0.35) 100%
+              )
+            `,
+            WebkitMask: `
+              linear-gradient(#fff 0 0) content-box,
+              linear-gradient(#fff 0 0)
+            `,
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            pointerEvents: "none",
+          }
         }}
       >
         {rows.length === 0 ? (
@@ -260,18 +318,9 @@ const CommodityTable = ({ title, items }) => {
             // allowTouchMove={false} // important for TV
             style={{
               height: isMobile ? "35vw" : "20vw",
-
+              background: "transparent",
+              overflow: "hidden",
               borderRadius: "1vw",
-              margin: ".4vw",
-              background:
-                "linear-gradient(180deg, rgba(10, 25, 50, 0.65) 0%, rgba(6, 18, 38, 0.55) 100%)",
-              backdropFilter: "blur(0.35vw)",
-              border: "0.1vw solid rgba(135, 206, 250, 0.25)",
-
-              boxShadow: `
-  inset 0 0 0.08vw rgba(255,255,255,0.15),
-  0 0 0.8vw rgba(0,191,255,0.08)
-`,
             }}
           >
             «
@@ -333,7 +382,7 @@ const CommodityTable = ({ title, items }) => {
                           lg: "1.2vw",
                         },
                         fontWeight: 400,
-                        color: "#fff",
+                        color: "rgba(255, 255, 255, 0.6)",
                         // mb:'-0.5vw'
                       }}
                     >
@@ -350,7 +399,7 @@ const CommodityTable = ({ title, items }) => {
                         lg: "1.3vw",
                         xl: "1.4vw",
                       },
-                      color: "#fff",
+                      color: "rgba(255, 255, 255, 0.8)",
                       textAlign: "start",
                     }}
                   >
@@ -365,8 +414,10 @@ const CommodityTable = ({ title, items }) => {
                         lg: "1.5vw",
                         xl: "1.4vw",
                       },
-                      fontWeight: 600,
-                      color: "#fff", // soft pink ASK
+                      fontWeight: 700,
+                      color: "#E5C583", // Champagne Gold
+                      textAlign: "center",
+                      fontVariantNumeric: "tabular-nums",
                     }}
                   >
                     {formatPrice(row.bid)}
@@ -380,8 +431,10 @@ const CommodityTable = ({ title, items }) => {
                         lg: "1.5vw",
                         xl: "1.4vw",
                       },
-                      fontWeight: 600,
-                      color: "#fff", // soft pink ASK
+                      fontWeight: 700,
+                      color: "#BAC8D9", // Platinum Silver
+                      textAlign: "center",
+                      fontVariantNumeric: "tabular-nums",
                     }}
                   >
                     {formatPrice(row.ask)}

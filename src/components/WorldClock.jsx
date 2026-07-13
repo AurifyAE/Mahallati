@@ -77,22 +77,30 @@ const WorldClockHorizontal = () => {
             alignItems: "center",
             gap: {
               xs: "10px",
-              lg: "1vw",
+              lg: "0.8vw",
             },
+            padding: "0.4vw 1.2vw",
+            borderRadius: "0.8vw",
+            background: "rgba(255, 255, 255, 0.02)",
+            border: "1px solid rgba(255, 255, 255, 0.07)",
+            boxShadow: "0 0.4vw 1.2vw rgba(0, 0, 0, 0.2)",
+            backdropFilter: "blur(0.4vw)",
           }}
         >
           <Box
             sx={{
               width: {
                 xs: "30px",
-                lg: "3vw",
+                lg: "2.2vw",
               },
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <img
               src={clock.flag}
               alt={clock.label}
-              style={{ width: "100%", height: "auto" }}
+              style={{ width: "100%", height: "auto", borderRadius: "2px" }}
             />
           </Box>
 
@@ -107,10 +115,11 @@ const WorldClockHorizontal = () => {
               sx={{
                 fontSize: {
                   xs: "14px",
-                  lg: "1vw",
+                  lg: "0.9vw",
                 },
-                fontWeight: 500,
-                color: "rgba(255, 255, 255, 0.75)",
+                fontWeight: 600,
+                color: "#BAC8D9", // Platinum Silver
+                letterSpacing: "0.05vw",
               }}
             >
               {clock.label}
@@ -123,7 +132,8 @@ const WorldClockHorizontal = () => {
                   lg: "1vw",
                 },
                 color: "#ffffff",
-                fontWeight: 600,
+                fontWeight: 700,
+                letterSpacing: "0.02vw",
               }}
             >
               {times[clock.key] || "--:--"}

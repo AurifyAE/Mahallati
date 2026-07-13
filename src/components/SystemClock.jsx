@@ -86,9 +86,9 @@ const SystemClock = () => {
               xs: "12px",
               sm: "2vw",
             },
-            fontWeight: 500,
+            fontWeight: 600,
             letterSpacing: "2px",
-            color: "#ffffff",
+            color: "#E5C583", // Champagne Gold
           }}
         >
           {timeData.date || "-- --- ----"}
@@ -100,7 +100,7 @@ const SystemClock = () => {
               xs: "12px",
               sm: "1vw",
             },
-            color: "rgba(255, 255, 255, 0.75)",
+            color: "#BAC8D9", // Platinum Silver
             letterSpacing: "2px",
             fontWeight: 500,
           }}

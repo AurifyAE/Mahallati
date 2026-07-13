@@ -24,25 +24,25 @@ const NewsTicker = ({ newsItems = [] }) => {
         background: `
           linear-gradient(
             90deg,
-            rgba(8, 20, 42, 0.85) 0%,
-            rgba(15, 32, 64, 0.75) 40%,
-            rgba(8, 20, 42, 0.85) 100%
+            rgba(18, 14, 10, 0.85) 0%,
+            rgba(32, 26, 18, 0.75) 40%,
+            rgba(18, 14, 10, 0.85) 100%
           )
         `,
-        borderTop: "0.05vw solid rgba(135, 206, 250, 0.18)",
-        borderBottom: "0.05vw solid rgba(135, 206, 250, 0.12)",
+        borderTop: "0.05vw solid rgba(229, 197, 131, 0.22)",
+        borderBottom: "0.05vw solid rgba(229, 197, 131, 0.12)",
         boxShadow: `
-          inset 0 0 1vw rgba(0, 191, 255, 0.05),
-          0 0 1vw rgba(0,0,0,0.2)
+          inset 0 0 1vw rgba(229, 197, 131, 0.04),
+          0 0 1vw rgba(0,0,0,0.25)
         `,
       }}
     >
       {/* LEFT BRAND */}
       <Typography
         sx={{
-          color: "#fff",
+          color: "#E5C583", // Champagne Gold
           background:
-            "linear-gradient(321deg, rgba(10, 30, 60, 0.65), rgba(0, 191, 255, 0.4), rgba(10, 30, 60, 0.65))",
+            "linear-gradient(321deg, rgba(32, 26, 18, 0.7), rgba(229, 197, 131, 0.2), rgba(32, 26, 18, 0.7))",
           fontSize: {
             xs: "12px",
             lg: "1.2vw",
