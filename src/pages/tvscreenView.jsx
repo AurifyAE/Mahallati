@@ -250,14 +250,6 @@ function TvScreen() {
         alignItems="center"
         width="100%"
       >
-        {/* Side: SpotRate & Date Time */}
-        <Grid xs={12} md={6} padding="1vw" gap="1vw" display="grid">
-          <SystemClock />
-          <WorldClockHorizontal />
-          <CommodityTable items={commodities} />
-
-          <PoweredByAurify />
-        </Grid>
         <Grid
           xs={12}
           md={6}
@@ -280,6 +272,15 @@ function TvScreen() {
           </Box>
           <SpotRate />
         </Grid>
+        {/* Side: SpotRate & Date Time */}
+        <Grid xs={12} md={6} padding="1vw" gap="1vw" display="grid">
+          <SystemClock />
+          <WorldClockHorizontal />
+          <CommodityTable items={commodities} />
+
+          <PoweredByAurify />
+        </Grid>
+
 
 
 
