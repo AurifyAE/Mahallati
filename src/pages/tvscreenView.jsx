@@ -240,14 +240,13 @@ function TvScreen() {
         container
         spacing={10}
         minHeight="100%"
-        // alignItems="flex-start"
+        alignItems="flex-start"
         justifyContent="space-between"
         flexWrap="wrap"
         zIndex="1"
         position="relative"
         margin="0"
-        padding="0 2vw "
-        alignItems="center"
+        padding={{ xs: "20px 2vw 0 2vw", md: "2.5vw 2vw 0 2vw" }}
         width="100%"
       >
         <Grid

@@ -150,7 +150,7 @@ const CommodityTable = ({ title, items }) => {
         background: "rgba(6, 18, 14, 0.65)",
         backdropFilter: "blur(8px)",
         boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.4)",
-        padding: "1vw",
+        padding: "1vw 1vw 0 1vw",
         overflow: "hidden",
         position: "relative",
         "&::before": {
