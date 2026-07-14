@@ -150,7 +150,7 @@ const CommodityTable = ({ title, items }) => {
         background: "rgba(6, 18, 14, 0.65)",
         backdropFilter: "blur(8px)",
         boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.4)",
-        padding: "1vw 1vw 0 1vw",
+        padding: ".3vw 1vw 0 1vw",
         overflow: "hidden",
         position: "relative",
         "&::before": {
@@ -192,7 +192,7 @@ const CommodityTable = ({ title, items }) => {
           sx={{
             fontSize: {
               xs: "12px",
-              md: "1.05vw",
+              md: "1.1vw",
             },
             fontWeight: 600,
             color: "#BAC8D9",
@@ -207,7 +207,7 @@ const CommodityTable = ({ title, items }) => {
           sx={{
             fontSize: {
               xs: "12px",
-              md: "1.05vw",
+              md: "1.1vw",
             },
             fontWeight: 600,
             color: "#BAC8D9",
@@ -222,7 +222,7 @@ const CommodityTable = ({ title, items }) => {
           sx={{
             fontSize: {
               xs: "12px",
-              md: "1.05vw",
+              md: "1.1vw",
             },
             fontWeight: 650,
             color: "#E5C583", // Yellow/Gold
@@ -237,7 +237,7 @@ const CommodityTable = ({ title, items }) => {
           sx={{
             fontSize: {
               xs: "12px",
-              md: "1.05vw",
+              md: "1.1vw",
             },
             fontWeight: 650,
             color: "#85E374", // Light Green
@@ -284,7 +284,7 @@ const CommodityTable = ({ title, items }) => {
                   sx={{
                     fontSize: {
                       xs: "13px",
-                      md: "1.2vw",
+                      md: "1.5vw",
                     },
                     fontWeight: 600,
                     color: "#EAEFF5",
@@ -326,7 +326,7 @@ const CommodityTable = ({ title, items }) => {
                   sx={{
                     fontSize: {
                       xs: "13px",
-                      md: "1.2vw",
+                      md: "1.5vw",
                     },
                     fontWeight: 700,
                     color: "#E5C583",
@@ -342,7 +342,7 @@ const CommodityTable = ({ title, items }) => {
                   sx={{
                     fontSize: {
                       xs: "13px",
-                      md: "1.2vw",
+                      md: "1.5vw",
                     },
                     fontWeight: 700,
                     color: "#85E374",

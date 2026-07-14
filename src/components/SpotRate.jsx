@@ -3,12 +3,14 @@ import { Box, Typography } from "@mui/material";
 import { useSpotRate } from "../context/SpotRateContext";
 
 const SpotRate = () => {
-  const { goldData, silverData } = useSpotRate();
+  const { goldData, silverData, palladiumData } = useSpotRate();
 
   const [goldBidDir, setGoldBidDir] = useState("neutral");
   const [goldAskDir, setGoldAskDir] = useState("neutral");
   const [silverBidDir, setSilverBidDir] = useState("neutral");
   const [silverAskDir, setSilverAskDir] = useState("neutral");
+  const [palladiumBidDir, setPalladiumBidDir] = useState("neutral");
+  const [palladiumAskDir, setPalladiumAskDir] = useState("neutral");
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -27,6 +29,8 @@ const SpotRate = () => {
     goldAsk: null,
     silverBid: null,
     silverAsk: null,
+    palladiumBid: null,
+    palladiumAsk: null,
     platinumBid: null,
     platinumAsk: null,
   });
@@ -77,6 +81,22 @@ const SpotRate = () => {
     );
   }, [silverData.ask]);
 
+  useEffect(() => {
+    prev.current.palladiumBid = detectChange(
+      prev.current.palladiumBid,
+      palladiumData.bid,
+      setPalladiumBidDir,
+    );
+  }, [palladiumData.bid]);
+
+  useEffect(() => {
+    prev.current.palladiumAsk = detectChange(
+      prev.current.palladiumAsk,
+      palladiumData.ask,
+      setPalladiumAskDir,
+    );
+  }, [palladiumData.ask]);
+
   const RateBox = ({ label, value, dir, isSilver, lowHighLabel, lowHighValue }) => {
     const hasPulse = dir !== "neutral";
 
@@ -108,11 +128,11 @@ const SpotRate = () => {
       >
         <Typography
           sx={{
-            fontSize: { xs: "14px", md: "1.3vw" },
+            fontSize: { xs: "12px", md: "1.0vw" },
             fontWeight: 600,
             color: "#8899A6",
             letterSpacing: "0.08em",
-            mb: "0.5vw",
+            mb: "0.3vw",
           }}
         >
           {label}
@@ -124,9 +144,9 @@ const SpotRate = () => {
             textAlign: "center",
             bgcolor: bgColor,
             border: border,
-            borderRadius: "1vw",
-            py: "0.9vw",
-            px: "1.4vw",
+            borderRadius: "0.8vw",
+            py: "0.5vw",
+            px: "1vw",
             boxShadow: "inset 0 0 1vw rgba(0, 0, 0, 0.3)",
             transition: "all 0.4s ease",
             ...(hasPulse && {
@@ -140,7 +160,7 @@ const SpotRate = () => {
           <Typography
             sx={{
               fontSize: {
-                xs: "22px",
+                xs: "18px",
                 md: "2.9vw",
               },
               fontWeight: 800,
@@ -156,10 +176,10 @@ const SpotRate = () => {
 
         <Typography
           sx={{
-            fontSize: { xs: "12px", md: "1.1vw" },
+            fontSize: { xs: "11px", md: "1.3vw" },
             fontWeight: 600,
             color: "#8899A6",
-            mt: "0.5vw",
+            mt: "0.3vw",
             letterSpacing: "0.02em",
           }}
         >
@@ -173,13 +193,18 @@ const SpotRate = () => {
   };
 
   const MetalPanel = ({ data, bidDir, askDir, theme }) => {
-    const isSilver = theme === "silver";
+    const isSilver = theme === "silver" || theme === "palladium";
 
     let title = "GOLD";
     let panelBg = "rgba(6, 18, 14, 0.65)";
+    let imageSrc = "/images/gold-bar.png";
 
-    if (isSilver) {
+    if (theme === "silver") {
       title = "SILVER";
+      imageSrc = "/images/silver-bar.png";
+    } else if (theme === "palladium") {
+      title = "PALLADIUM";
+      imageSrc = "/images/silver-bar.png";
     }
 
     return (
@@ -187,17 +212,17 @@ const SpotRate = () => {
         sx={{
           position: "relative",
           overflow: "hidden",
-          borderRadius: "1.8vw",
+          borderRadius: "1.2vw",
           backdropFilter: "blur(0.8vw)",
           background: panelBg,
           boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.5)",
           padding: {
-            xs: "4vw 5vw",
-            md: "1.5vw 2vw",
+            xs: "3vw 4vw",
+            md: "0.8vw 1.2vw",
           },
           display: "grid",
           alignItems: "center",
-          gap: "2vw",
+          gap: "1.5vw",
           gridTemplateColumns: "0.7fr 1fr 1fr",
           "&::before": {
             content: '""',
@@ -243,19 +268,19 @@ const SpotRate = () => {
           <Box
             className="animate-float"
             sx={{
-              width: "5.5vw",
-              height: "5.5vw",
+              width: "4.2vw",
+              height: "4.2vw",
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
             component="img"
-            src={isSilver ? "/images/silver-bar.png" : "/images/gold-bar.png"}
+            src={imageSrc}
             alt={title}
           />
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: "1.5vw" },
+              fontSize: { xs: "14px", md: "1.3vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
@@ -293,7 +318,7 @@ const SpotRate = () => {
     <Box
       sx={{
         display: "grid",
-        gap: "1.8vw",
+        gap: "1.1vw",
         width: "100%",
         alignItems: "end",
         marginTop: {
@@ -316,6 +341,12 @@ const SpotRate = () => {
         bidDir={silverBidDir}
         askDir={silverAskDir}
         theme="silver"
+      />
+      <MetalPanel
+        data={palladiumData}
+        bidDir={palladiumBidDir}
+        askDir={palladiumAskDir}
+        theme="palladium"
       />
     </Box>
   );
