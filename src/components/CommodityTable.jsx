@@ -143,61 +143,60 @@ const CommodityTable = ({ title, items }) => {
   if (!rows.length) return null;
 
   return (
-    <Box sx={{ width: "100%", overflow: "hidden" }}>
+    <Box
+      sx={{
+        width: "100%",
+        borderRadius: "1.2vw",
+        background: "rgba(6, 18, 14, 0.65)",
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.4)",
+        padding: "1vw",
+        overflow: "hidden",
+        position: "relative",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          padding: "1px", // border thickness
+          borderRadius: "inherit",
+          background: `
+            linear-gradient(
+              135deg,
+              rgba(77, 191, 0, 0.3) 0%,
+              rgba(229, 197, 131, 0.45) 50%,
+              rgba(77, 191, 0, 0.2) 100%
+            )
+          `,
+          WebkitMask: `
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0)
+          `,
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
+          pointerEvents: "none",
+        }
+      }}
+    >
+      {/* Header Row */}
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "1.4fr 0.8fr 0.8fr 0.8fr",
-          py: "0.9vw",
-          px: "1.5vw",
-          alignItems: "end",
-          borderRadius: "1vw",
-          margin: ".4vw",
-          background:
-            "linear-gradient(180deg, rgba(10, 25, 50, 0.65) 0%, rgba(6, 18, 38, 0.55) 100%)",
-          backdropFilter: "blur(0.35vw)",
-          border: "0.1vw solid rgba(135, 206, 250, 0.25)",
-          boxShadow: `
-            inset 0 0 0.08vw rgba(255,255,255,0.15),
-            0 0 0.8vw rgba(0,191,255,0.08)
-          `,
-          position: "relative",
-
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            padding: "0.08vw", // border thickness
-            borderRadius: "inherit",
-            background: `
-              linear-gradient(
-                135deg,
-                rgba(255, 223, 0, 0.35) 0%,
-                rgba(255, 255, 255, 0.45) 50%,
-                rgba(192, 192, 192, 0.35) 100%
-              )
-            `,
-            WebkitMask: `
-              linear-gradient(#fff 0 0) content-box,
-              linear-gradient(#fff 0 0)
-            `,
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            pointerEvents: "none",
-          }
+          gridTemplateColumns: "1.8fr 1fr 1.1fr 1.1fr",
+          py: "0.8vw",
+          px: "1.2vw",
+          alignItems: "center",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
         }}
       >
         <Typography
           sx={{
-            // fontSize: "1.2vw",
             fontSize: {
-              xs: "14px",
-              lg: "1.2vw",
-              xl: "1.3vw",
+              xs: "12px",
+              md: "1.05vw",
             },
             fontWeight: 600,
-            color: "rgba(255, 255, 255, 0.5)",
-            letterSpacing: "0.04vw",
+            color: "#BAC8D9",
+            letterSpacing: "0.05em",
             textAlign: "start",
           }}
         >
@@ -206,15 +205,14 @@ const CommodityTable = ({ title, items }) => {
 
         <Typography
           sx={{
-            // fontSize: "1.2vw",
             fontSize: {
-              xs: "14px",
-              lg: "1.2vw",
-              xl: "1.3vw",
+              xs: "12px",
+              md: "1.05vw",
             },
             fontWeight: 600,
-            color: "rgba(255, 255, 255, 0.5)",
-            textAlign: "start",
+            color: "#BAC8D9",
+            letterSpacing: "0.05em",
+            textAlign: "center",
           }}
         >
           UNIT
@@ -223,227 +221,141 @@ const CommodityTable = ({ title, items }) => {
         <Typography
           sx={{
             fontSize: {
-              xs: "14px",
-              lg: "1.2vw",
-              xl: "1.3vw",
+              xs: "12px",
+              md: "1.05vw",
             },
             fontWeight: 650,
-            color: "#E5C583", // Champagne Gold
+            color: "#E5C583", // Yellow/Gold
+            letterSpacing: "0.05em",
             textAlign: "center",
           }}
         >
-          BUY AED
+          ASK
         </Typography>
 
         <Typography
           sx={{
-            // fontSize: "1.2vw",
             fontSize: {
-              xs: "14px",
-              lg: "1.2vw",
-              xl: "1.3vw",
+              xs: "12px",
+              md: "1.05vw",
             },
             fontWeight: 650,
-            color: "#BAC8D9", // Platinum Silver
+            color: "#85E374", // Light Green
+            letterSpacing: "0.05em",
             textAlign: "center",
           }}
         >
-          SELL AED{" "}
+          BID
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          mt: "1vw",
-          maxHeight: { xs: "auto", sm: "20vw" },
-          borderRadius: "1vw",
-          margin: ".4vw",
-          background:
-            "linear-gradient(180deg, rgba(10, 25, 50, 0.65) 0%, rgba(6, 18, 38, 0.55) 100%)",
-          backdropFilter: "blur(0.35vw)",
-          border: "0.1vw solid rgba(135, 206, 250, 0.25)",
-          boxShadow: `
-            inset 0 0 0.08vw rgba(255,255,255,0.15),
-            0 0 0.8vw rgba(0,191,255,0.08)
-          `,
-          position: "relative",
-          overflow: "visible",
-
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            padding: "0.08vw", // border thickness
-            borderRadius: "inherit",
-            background: `
-              linear-gradient(
-                135deg,
-                rgba(255, 223, 0, 0.35) 0%,
-                rgba(255, 255, 255, 0.45) 50%,
-                rgba(192, 192, 192, 0.35) 100%
-              )
-            `,
-            WebkitMask: `
-              linear-gradient(#fff 0 0) content-box,
-              linear-gradient(#fff 0 0)
-            `,
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            pointerEvents: "none",
-          }
-        }}
-      >
-        {rows.length === 0 ? (
-          <Typography
-            sx={{
-              py: "3vw",
-              textAlign: "center",
-              color: "rgba(227,192,120,0.4)",
-              fontSize: "1.25vw",
-            }}
-          >
-            No data available
-          </Typography>
-        ) : (
-          <Swiper
-            direction="vertical"
-            slidesPerView={5}
-            loop={true}
-            modules={[Autoplay]} // 👈 Register it here
-            autoplay={{
-              delay: 0,
-              disableOnInteraction: false,
-            }}
-            speed={3000} // 👈 higher = smoother slow scroll
-            // allowTouchMove={false} // important for TV
-            style={{
-              height: isMobile ? "35vw" : "20vw",
-              background: "transparent",
-              overflow: "hidden",
-              borderRadius: "1vw",
-            }}
-          >
-            «
-            {rows.map((row, index) => (
-              <SwiperSlide key={index}>
-                <Box
-                  key={index}
+      {/* Rows Container */}
+      <Box sx={{ mt: "0.5vw" }}>
+        <Swiper
+          direction="vertical"
+          slidesPerView={5}
+          loop={true}
+          modules={[Autoplay]}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+          }}
+          speed={3000}
+          style={{
+            height: isMobile ? "35vw" : "20vw",
+            background: "transparent",
+            overflow: "hidden",
+          }}
+        >
+          {rows.map((row, index) => (
+            <SwiperSlide key={index}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1.8fr 1fr 1.1fr 1.1fr",
+                  alignItems: "center",
+                  py: "0.7vw",
+                  px: "1.2vw",
+                  height: "100%",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                }}
+              >
+                <Typography
                   sx={{
-                    display: "grid",
-                    gridTemplateColumns: "1.4fr 0.8fr 0.8fr 0.8fr",
-                    alignItems: "center",
-                    py: ".7vw",
-                    px: "1.5vw",
-                    height: "100%",
-
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      bottom: 0,
-                      width: "100%",
-                      height: "1px",
-
-                      background:
-                        "linear-gradient(to right, transparent 5%, rgba(135, 206, 250, 0.45),transparent 95%)",
-
-                    }
+                    fontSize: {
+                      xs: "13px",
+                      md: "1.2vw",
+                    },
+                    fontWeight: 600,
+                    color: "#EAEFF5",
+                    textAlign: "start",
+                    lineHeight: "1.2",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      // fontSize: "1.24vw",
-                      fontSize: {
-                        xs: "14px",
-                        sm: "12px",
-                        lg: "1.6vw",
-                        xl: "1.4vw",
-                      },
-                      fontWeight: 800,
-                      color: "#fff",
-                      display: "grid",
-                      alignItems: "center ",
-                      justifyContent: "start",
-                      gridTemplateColumns: "auto auto",
-                      textAlign: "start",
-                      lineHeight: "1",
-                      gap: {
-                        xs: "7px",
-                        lg: "0.3vw",
-                      },
-                    }}
-                  >
-                    {row.metal_name ? row.metal_name : row.metal}
-                    <Typography
-                      sx={{
-                        // fontSize: "1vw",
-                        fontSize: {
-                          xs: "12px",
-                          sm: "10px",
-                          lg: "1.2vw",
-                        },
+                  {row.metal_name ? row.metal_name : row.metal}
+                  {row.purity && (
+                    <span
+                      style={{
+                        fontSize: "0.95vw",
                         fontWeight: 400,
-                        color: "rgba(255, 255, 255, 0.6)",
-                        // mb:'-0.5vw'
+                        color: "#8899A6",
+                        marginLeft: "0.4vw",
                       }}
                     >
-                      {/* {row.purity} */}
                       {getPurityLabel(row.purity)}
-                    </Typography>
-                  </Typography>
+                    </span>
+                  )}
+                </Typography>
 
-                  <Typography
-                    sx={{
-                      // fontSize: "1.18vw",
-                      fontSize: {
-                        xs: "14px",
-                        lg: "1.3vw",
-                        xl: "1.4vw",
-                      },
-                      color: "rgba(255, 255, 255, 0.8)",
-                      textAlign: "start",
-                    }}
-                  >
-                    {row.unit}
-                  </Typography>
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "12px",
+                      md: "1.15vw",
+                    },
+                    color: "#BAC8D9",
+                    textAlign: "center",
+                    fontWeight: 500,
+                  }}
+                >
+                  {row.unit}
+                </Typography>
 
-                  <Typography
-                    sx={{
-                      // fontSize: "1.32vw",
-                      fontSize: {
-                        xs: "14px",
-                        lg: "1.5vw",
-                        xl: "1.4vw",
-                      },
-                      fontWeight: 700,
-                      color: "#E5C583", // Champagne Gold
-                      textAlign: "center",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {formatPrice(row.bid)}
-                  </Typography>
+                {/* Column 3: ASK rate (Yellow/Gold) */}
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "13px",
+                      md: "1.2vw",
+                    },
+                    fontWeight: 700,
+                    color: "#E5C583",
+                    textAlign: "center",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {formatPrice(row.ask)}
+                </Typography>
 
-                  <Typography
-                    sx={{
-                      // fontSize: "1.32vw",
-                      fontSize: {
-                        xs: "14px",
-                        lg: "1.5vw",
-                        xl: "1.4vw",
-                      },
-                      fontWeight: 700,
-                      color: "#BAC8D9", // Platinum Silver
-                      textAlign: "center",
-                      fontVariantNumeric: "tabular-nums",
-                    }}
-                  >
-                    {formatPrice(row.ask)}
-                  </Typography>
-                </Box>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        )}
+                {/* Column 4: BID rate (Green) */}
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "13px",
+                      md: "1.2vw",
+                    },
+                    fontWeight: 700,
+                    color: "#85E374",
+                    textAlign: "center",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {formatPrice(row.bid)}
+                </Typography>
+              </Box>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Box>
     </Box>
   );

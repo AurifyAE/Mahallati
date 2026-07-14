@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Marquee from "react-fast-marquee";
+ 
 
 const NewsTicker = ({ newsItems = [] }) => {
   const items =
@@ -15,50 +16,58 @@ const NewsTicker = ({ newsItems = [] }) => {
         width: "100%",
         height: {
           xs: "38px",
-          lg: "2.7vw",
+          md: "2.8vw",
         },
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
-        backdropFilter: "blur(0.6vw)",
-        background: `
-          linear-gradient(
-            90deg,
-            rgba(18, 14, 10, 0.85) 0%,
-            rgba(32, 26, 18, 0.75) 40%,
-            rgba(18, 14, 10, 0.85) 100%
-          )
-        `,
-        borderTop: "0.05vw solid rgba(229, 197, 131, 0.22)",
-        borderBottom: "0.05vw solid rgba(229, 197, 131, 0.12)",
-        boxShadow: `
-          inset 0 0 1vw rgba(229, 197, 131, 0.04),
-          0 0 1vw rgba(0,0,0,0.25)
-        `,
+        backdropFilter: "blur(8px)",
+        background: "linear-gradient(90deg, rgba(3, 10, 8, 0.85) 0%, rgba(6, 18, 14, 0.75) 50%, rgba(3, 10, 8, 0.85) 100%)",
+        borderTop: "1px solid rgba(77, 191, 0, 0.15)",
+        borderBottom: "1px solid rgba(229, 197, 131, 0.12)",
+        boxShadow: "0 -4px 10px rgba(0, 0, 0, 0.4)",
       }}
     >
-      {/* LEFT BRAND */}
-      <Typography
+      {/* LEFT BRAND SECTION */}
+      <Box
         sx={{
-          color: "#E5C583", // Champagne Gold
-          background:
-            "linear-gradient(321deg, rgba(32, 26, 18, 0.7), rgba(229, 197, 131, 0.2), rgba(32, 26, 18, 0.7))",
-          fontSize: {
-            xs: "12px",
-            lg: "1.2vw",
-          },
-          fontWeight: 700,
-          whiteSpace: "nowrap",
-          padding: "0 3.5vw",
-          height: "100%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          gap: "0.6vw",
+          pl: "2vw",
+          pr: "1.5vw",
+          height: "100%",
           flexShrink: 0,
         }}
       >
-        Mahallati Updates
-      </Typography>
+        <Typography
+          sx={{
+            color: "#E5C583", // Gold/Yellow touch
+            fontSize: {
+              xs: "12px",
+              md: "1.1vw",
+            },
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Mahallati Updates
+        </Typography>
+        <Typography
+          sx={{
+            color: "rgba(255, 255, 255, 0.2)",
+            fontSize: {
+              xs: "14px",
+              md: "1.2vw",
+            },
+            mx: "0.5vw",
+            fontWeight: 300,
+          }}
+        >
+          |
+        </Typography>
+      </Box>
 
       {/* NEWS TICKER */}
       <Box
@@ -70,31 +79,42 @@ const NewsTicker = ({ newsItems = [] }) => {
           alignItems: "center",
         }}
       >
-        <Marquee
-          speed={40}          // Lower = slower
-          gradient={false}
-          autoFill={true}
-          loop={0}
-          direction="left"       // Infinite
-        >
+        <Marquee speed={40} gradient={false} autoFill={true} loop={0} direction="left">
           {items.map((item, index) => (
-            <Typography
+            <Box
               key={index}
-              component="span"
               sx={{
-                color: "#fff",
-                fontSize: {
-                  xs: "12px",
-                  lg: "1.3vw",
-                },
-                fontWeight: 500,
-                whiteSpace: "nowrap",
-                mx: "1vw",
-                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "1.5vw",
               }}
             >
-              {item?.description || ""}
-            </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  color: "#EAEFF5",
+                  fontSize: {
+                    xs: "12px",
+                    md: "1.15vw",
+                  },
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  mx: "1.5vw",
+                }}
+              >
+                {item?.description || ""}
+              </Typography>
+              <span
+                style={{
+                  color: "#4dbf00",
+                  fontSize: "1.3vw",
+                  opacity: 0.8,
+                  marginRight: "1vw",
+                }}
+              >
+                •
+              </span>
+            </Box>
           ))}
         </Marquee>
       </Box>

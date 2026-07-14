@@ -77,88 +77,96 @@ const SpotRate = () => {
     );
   }, [silverData.ask]);
 
-  const getColors = (dir) => {
-    if (dir === "rise")
-      return {
-        bgColor: "#4dbf00",
-        border: "1px solid #008f0c",
-        color: "white",
-      };
-    if (dir === "fall")
-      return {
-        bgColor: "#FF0040",
-        border: " 1px solid #ff3366",
-        color: "white",
-      };
-    return {
-      bgColor: "#F0F8FF00",
-      border: " 1px solid #FFFFFF",
-      color: "#fff",
-    };
-  };
-
-  const PricePulse = ({ label, value, dir }) => {
-    const { bgColor, border, color } = getColors(dir);
+  const RateBox = ({ label, value, dir, isSilver, lowHighLabel, lowHighValue }) => {
     const hasPulse = dir !== "neutral";
+
+    // Dynamic styles based on direction
+    let bgColor = "rgba(0, 0, 0, 0.4)";
+    let border = isSilver
+      ? "1px solid rgba(255, 255, 255, 0.08)"
+      : "1px solid rgba(229, 197, 131, 0.15)";
+    let color = "#EAEFF5";
+
+    if (dir === "rise") {
+      bgColor = "rgba(77, 191, 0, 0.25)";
+      border = "1px solid #4dbf00";
+      color = "#ffffff";
+    } else if (dir === "fall") {
+      bgColor = "rgba(255, 0, 64, 0.25)";
+      border = "1px solid #FF0040";
+      color = "#ffffff";
+    }
 
     return (
       <Box
         sx={{
-          position: "relative",
-          flex: 1,
-          mb: ".5vw",
-
-          overflow: "hidden",
-          ...(hasPulse && {
-            animation:
-              dir === "rise"
-                ? "pulseRise 0.8s ease-out"
-                : "pulseFall 0.8s ease-out",
-            bgcolor:
-              dir === "rise"
-                ? "0 0 0 0 rgba(0,255,157,0.6)"
-                : "0 0 0 0 rgba(255,51,102,0.6)",
-          }),
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
         }}
       >
         <Typography
           sx={{
-            // fontSize: "1vw",
-
-            fontSize: {
-              xs: "15px", // mobile
-              sm: "2.5vw", // small tablets
-              md: "1.5vw", // laptops
-            },
-            letterSpacing: "0.25vw",
-            color: "#fff",
+            fontSize: { xs: "12px", md: "1.1vw" },
+            fontWeight: 600,
+            color: "#8899A6",
+            letterSpacing: "0.08em",
+            mb: "0.5vw",
           }}
         >
           {label}
         </Typography>
 
-        <Typography
+        <Box
           sx={{
-            // fontSize: "2.4vw",
-            fontSize: {
-              xs: "18px", // mobile
-              sm: "2.5vw", // small tablets
-              md: "1.8vw", // laptops
-              lg: "2.4vw", // desktop
-              xl: "2.4vw", // large screens
-            },
-            fontWeight: 800,
-            letterSpacing: "0.18vw",
+            width: "100%",
             textAlign: "center",
             bgcolor: bgColor,
-            color: color,
             border: border,
-            borderRadius: "1vw",
-            fontVariantNumeric: "tabular-nums",
+            borderRadius: "0.8vw",
+            py: "0.6vw",
+            px: "1vw",
+            boxShadow: "inset 0 0 1vw rgba(0, 0, 0, 0.3)",
             transition: "all 0.4s ease",
+            ...(hasPulse && {
+              animation:
+                dir === "rise"
+                  ? "pulseRise 0.8s ease-out"
+                  : "pulseFall 0.8s ease-out",
+            }),
           }}
         >
-          {value}
+          <Typography
+            sx={{
+              fontSize: {
+                xs: "18px",
+                md: "2.5vw",
+              },
+              fontWeight: 800,
+              letterSpacing: "0.02em",
+              color: color,
+              fontVariantNumeric: "tabular-nums",
+              lineHeight: 1.1,
+            }}
+          >
+            {value || "--"}
+          </Typography>
+        </Box>
+
+        <Typography
+          sx={{
+            fontSize: { xs: "11px", md: "0.95vw" },
+            fontWeight: 600,
+            color: "#8899A6",
+            mt: "0.5vw",
+            letterSpacing: "0.02em",
+          }}
+        >
+          {lowHighLabel}{" "}
+          <span style={{ color: lowHighLabel === "LOW" ? "#85E374" : "#E5C583", fontWeight: 700, marginLeft: "0.2vw" }}>
+            {lowHighValue || "--"}
+          </span>
         </Typography>
       </Box>
     );
@@ -168,15 +176,10 @@ const SpotRate = () => {
     const isSilver = theme === "silver";
 
     let title = "GOLD";
-    let panelBg = "linear-gradient(135deg, rgba(20, 16, 12, 0.85) 0%, rgba(32, 26, 18, 0.9) 50%, rgba(15, 12, 9, 0.85) 100%)";
-    let panelBorder = "0.12vw solid rgba(218, 165, 32, 0.35)";
-    let panelShadow = "inset 0 0 1.5vw rgba(218, 165, 32, 0.1), 0 0.8vw 2vw rgba(0, 0, 0, 0.5)";
+    let panelBg = "rgba(6, 18, 14, 0.65)";
 
     if (isSilver) {
       title = "SILVER";
-      panelBg = "linear-gradient(135deg, rgba(12, 16, 24, 0.85) 0%, rgba(22, 28, 38, 0.9) 50%, rgba(10, 12, 18, 0.85) 100%)";
-      panelBorder = "0.12vw solid rgba(192, 192, 192, 0.35)";
-      panelShadow = "inset 0 0 1.5vw rgba(192, 192, 192, 0.15), 0 0.8vw 2vw rgba(0, 0, 0, 0.5)";
     }
 
     return (
@@ -184,20 +187,47 @@ const SpotRate = () => {
         sx={{
           position: "relative",
           overflow: "hidden",
-          borderRadius: "1.8vw",
+          borderRadius: "1.5vw",
           backdropFilter: "blur(0.8vw)",
           background: panelBg,
-          border: panelBorder,
-          boxShadow: panelShadow,
+          boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.5)",
           padding: {
-            xs: "2vw 3vw",
-            sm: "0.5vw 2vw",
-            md: "1.5vw 1vw",
+            xs: "3vw 4vw",
+            md: "1.2vw 1.5vw",
           },
           display: "grid",
           alignItems: "center",
-          gap: "1vw",
-          gridTemplateColumns: ".7fr 1fr 1fr",
+          gap: "1.5vw",
+          gridTemplateColumns: "0.85fr 1fr 1fr",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            padding: "1px", // border thickness
+            borderRadius: "inherit",
+            background: isSilver
+              ? `
+                linear-gradient(
+                  135deg,
+                  rgba(255, 255, 255, 0.2) 0%,
+                  rgba(77, 191, 0, 0.25) 100%
+                )
+              `
+              : `
+                linear-gradient(
+                  135deg,
+                  rgba(229, 197, 131, 0.35) 0%,
+                  rgba(77, 191, 0, 0.25) 100%
+                )
+              `,
+            WebkitMask: `
+              linear-gradient(#fff 0 0) content-box,
+              linear-gradient(#fff 0 0)
+            `,
+            WebkitMaskComposite: "xor",
+            maskComposite: "exclude",
+            pointerEvents: "none",
+          }
         }}
       >
         <Box
@@ -206,6 +236,7 @@ const SpotRate = () => {
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
+            gap: "0.5vw",
           }}
         >
           <Box
@@ -216,64 +247,43 @@ const SpotRate = () => {
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
-            component='img'
-            src={isSilver ? '/images/silver-bar.png' : '/images/gold-bar.png'}
+            component="img"
+            src={isSilver ? "/images/silver-bar.png" : "/images/gold-bar.png"}
             alt={title}
           />
 
           <Box
             sx={{
-              fontSize: { xs: "14px", md: "1.7vw" },
+              fontSize: { xs: "14px", md: "1.5vw" },
               fontWeight: 700,
-
               letterSpacing: "0.1em",
-              background: isSilver ? 'linear-gradient(90deg, #CCFBFF,#9AC6FF)' : 'linear-gradient(90deg, #FFF7CC,#FFCD9A)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              lineHeight: '1'
-
+              color: isSilver ? "#BAC8D9" : "#E5C583",
+              lineHeight: "1",
             }}
           >
             {title}
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            fontSize: {
-              xs: "15px", // mobile
-              sm: "2.5vw", // small tablets
-              md: "1.8vw", // laptops
-              lg: "1.5vw", // desktop
-              xl: "1.2vw", // large screens
-            },
-            color: "#fff",
+        {/* BID Box */}
+        <RateBox
+          label="BID"
+          value={data.bid}
+          dir={bidDir}
+          isSilver={isSilver}
+          lowHighLabel="LOW"
+          lowHighValue={data.low}
+        />
 
-            fontWeight: "700",
-          }}
-        >
-          <PricePulse label="BID" value={data.bid} dir={bidDir} />
-          LOW <span className="hl-value-low text-[#FF0040]">{data.low}</span>
-        </Box>
-
-        {/* Price Boxes */}
-        <Box
-          sx={{
-            fontSize: {
-              xs: "15px", // mobile
-              sm: "2.5vw", // small tablets
-              md: "1.8vw", // laptops
-              lg: "1.5vw", // desktop
-              xl: "1.2vw", // large screens
-            },
-            color: "#fff",
-            fontWeight: "700",
-          }}
-        >
-          <PricePulse label="ASK" value={data.ask} dir={askDir} />
-          HIGH{" "}
-          <span className="hl-value-high text-[#4dbf00]">{data.high}</span>
-        </Box>
+        {/* ASK Box */}
+        <RateBox
+          label="ASK"
+          value={data.ask}
+          dir={askDir}
+          isSilver={isSilver}
+          lowHighLabel="HIGH"
+          lowHighValue={data.high}
+        />
       </Box>
     );
   };
