@@ -58,7 +58,7 @@ const WorldClockHorizontal = () => {
       sx={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "space-between",
         gap: "1vw",
         width: "100%",
       }}
@@ -69,6 +69,7 @@ const WorldClockHorizontal = () => {
           sx={{
             display: "flex",
             alignItems: "center",
+            width: '100%',
             gap: {
               xs: "10px",
               lg: "0.8vw",

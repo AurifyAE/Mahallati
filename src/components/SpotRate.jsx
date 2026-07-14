@@ -141,7 +141,7 @@ const SpotRate = () => {
             sx={{
               fontSize: {
                 xs: "22px",
-                md: "3.2vw",
+                md: "2.9vw",
               },
               fontWeight: 800,
               letterSpacing: "0.02em",
@@ -198,7 +198,7 @@ const SpotRate = () => {
           display: "grid",
           alignItems: "center",
           gap: "2vw",
-          gridTemplateColumns: "0.85fr 1fr 1fr",
+          gridTemplateColumns: "0.7fr 1fr 1fr",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -237,6 +237,7 @@ const SpotRate = () => {
             alignItems: "center",
             flexDirection: "column",
             gap: "0.5vw",
+            flex: '1'
           }}
         >
           <Box
@@ -254,7 +255,7 @@ const SpotRate = () => {
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: "1.8vw" },
+              fontSize: { xs: "16px", md: "1.5vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
@@ -300,6 +301,7 @@ const SpotRate = () => {
           sm: "0vw", // small tablets
         },
         gridTemplateColumns: { xs: "1fr" },
+
       }}
     >
       <MetalPanel
