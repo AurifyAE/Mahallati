@@ -23,8 +23,8 @@ const NewsTicker = ({ newsItems = [] }) => {
         overflow: "hidden",
         backdropFilter: "blur(8px)",
         background: "linear-gradient(90deg, rgba(3, 10, 8, 0.85) 0%, rgba(6, 18, 14, 0.75) 50%, rgba(3, 10, 8, 0.85) 100%)",
-        borderTop: "1px solid rgba(77, 191, 0, 0.15)",
-        borderBottom: "1px solid rgba(229, 197, 131, 0.12)",
+        borderTop: "1.5px solid",
+        borderImage: "linear-gradient(to right, rgba(229, 197, 131, 0.05) 0%, rgba(255 228 173 / 0.62) 50%, rgba(229, 197, 131, 0.05) 100%) 1",
         boxShadow: "0 -4px 10px rgba(0, 0, 0, 0.4)",
       }}
     >
