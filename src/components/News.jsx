@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Marquee from "react-fast-marquee";
- 
+
 
 const NewsTicker = ({ newsItems = [] }) => {
   const items =
@@ -100,6 +100,7 @@ const NewsTicker = ({ newsItems = [] }) => {
                   fontWeight: 500,
                   whiteSpace: "nowrap",
                   mx: "1.5vw",
+                  lineHeight: '1'
                 }}
               >
                 {item?.description || ""}
