@@ -28,7 +28,7 @@ function TvScreen() {
   const [goldAskSpread, setGoldAskSpread] = useState("");
   const [silverBidSpread, setSilverBidSpread] = useState("");
   const [silverAskSpread, setSilverAskSpread] = useState("");
-  const [symbols, setSymbols] = useState(["GOLD", "SILVER", 'PALLADIUM', 'PLATINUM']);
+  const [symbols, setSymbols] = useState(["GOLD", "SILVER"]);
   const [error, setError] = useState(null);
 
   const { updateMarketData } = useSpotRate();
