@@ -108,7 +108,7 @@ const SpotRate = () => {
       >
         <Typography
           sx={{
-            fontSize: { xs: "14px", md: "1.2vw" },
+            fontSize: { xs: "14px", md: "1.4vw" },
             fontWeight: 600,
             color: "#8899A6",
             letterSpacing: "0.08em",
@@ -125,8 +125,8 @@ const SpotRate = () => {
             bgcolor: bgColor,
             border: border,
             borderRadius: "1vw",
-            py: "0.6vw",
-            px: "0.8vw",
+            py: "0.8vw",
+            px: "1.1vw",
             boxShadow: "inset 0 0 1vw rgba(0, 0, 0, 0.3)",
             transition: "all 0.4s ease",
             ...(hasPulse && {
@@ -141,7 +141,7 @@ const SpotRate = () => {
             sx={{
               fontSize: {
                 xs: "22px",
-                md: "2.6vw",
+                md: "3.4vw",
               },
               fontWeight: 800,
               letterSpacing: "0.02em",
@@ -156,7 +156,7 @@ const SpotRate = () => {
 
         <Typography
           sx={{
-            fontSize: { xs: "12px", md: "1.1vw" },
+            fontSize: { xs: "12px", md: "1.3vw" },
             fontWeight: 600,
             color: "#8899A6",
             mt: "0.4vw",
@@ -195,11 +195,11 @@ const SpotRate = () => {
           boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.5)",
           padding: {
             xs: "4vw 5vw",
-            md: "1.2vw 1.5vw",
+            md: "1.8vw 2.2vw",
           },
           display: "grid",
           alignItems: "center",
-          gap: "1.2vw",
+          gap: "1.8vw",
           gridTemplateColumns: "0.55fr 1fr 1fr",
           "&::before": {
             content: '""',
@@ -245,8 +245,8 @@ const SpotRate = () => {
           <Box
             className="animate-float"
             sx={{
-              width: "5.5vw",
-              height: "5.5vw",
+              width: "7vw",
+              height: "7vw",
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
@@ -257,7 +257,7 @@ const SpotRate = () => {
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: "1.5vw" },
+              fontSize: { xs: "16px", md: "1.8vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
@@ -295,7 +295,7 @@ const SpotRate = () => {
     <Box
       sx={{
         display: "grid",
-        gap: "1.8vw",
+        gap: "2.5vw",
         width: "100%",
         alignItems: "end",
         marginTop: {

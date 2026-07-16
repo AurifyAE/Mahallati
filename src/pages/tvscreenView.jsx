@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Grid, Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import SpotRate from "../components/SpotRate";
-import CommodityTable from "../components/CommodityTable";
+import CommodityTableNew from "../components/CommodityTableNew";
 import NewsTicker from "../components/News";
 
 import {
@@ -13,9 +13,10 @@ import {
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
 import mainLogo from "/images/logo.png";
-import WorldClockHorizontal from "../components/WorldClock";
 import SystemClock from "../components/SystemClock";
-import PoweredByAurify from "../components/PoweredByAurify";
+import WorldClockHorizontal from "../components/WorldClock";
+import CurrencyTable from "../components/CurrencyTable";
+import CommodityTable from "../components/CommodityTable";
 
 function TvScreen() {
   const [showLimitModal, setShowLimitModal] = useState(false);
@@ -272,17 +273,31 @@ function TvScreen() {
           <SpotRate />
         </Grid>
         {/* Side: SpotRate & Date Time */}
-        <Grid xs={12} md={6} padding="1vw" gap="1vw" display="grid">
-          <SystemClock />
-          <WorldClockHorizontal />
-          <CommodityTable items={commodities} />
+        <Grid xs={12} md={6} padding="1vw" gap="1.5vw" display="grid">
+          {/* Header Row: Date & World Clocks side-by-side */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              width: "100%",
+              gap: "1vw",
+            }}
+          >
+            <SystemClock />
+ 
+            <WorldClockHorizontal />
+          </Box>
 
-          <PoweredByAurify />
+          <CurrencyTable />
+          <CommodityTable  />
+          <CommodityTableNew />
         </Grid>
 
 
 
-
+{/* 
         <Grid
           md={12}
           sx={{
@@ -295,7 +310,7 @@ function TvScreen() {
           }}
         >
           <NewsTicker newsItems={news} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );
