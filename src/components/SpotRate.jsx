@@ -200,7 +200,7 @@ const SpotRate = () => {
           display: "grid",
           alignItems: "center",
           gap: "1.8vw",
-          gridTemplateColumns: "0.55fr 1fr 1fr",
+          gridTemplateColumns: "1fr 1fr",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -234,19 +234,20 @@ const SpotRate = () => {
       >
         <Box
           sx={{
+            gridColumn: "span 2",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column",
+            // flexDirection: "column",
             gap: "0.5vw",
-            flex: '1'
+            width: "100%",
           }}
         >
           <Box
             className="animate-float"
             sx={{
-              width: "7vw",
-              height: "7vw",
+              width: "6vw",
+              height: "6vw",
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
@@ -257,7 +258,7 @@ const SpotRate = () => {
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: "1.8vw" },
+              fontSize: { xs: "16px", md: "2.8vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
