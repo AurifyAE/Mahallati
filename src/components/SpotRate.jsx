@@ -108,7 +108,7 @@ const SpotRate = () => {
       >
         <Typography
           sx={{
-            fontSize: { xs: "14px", md: "1.4vw" },
+            fontSize: { xs: "14px", md: isSilver?"1.4vw ":"2vw" },
             fontWeight: 600,
             color: "#8899A6",
             letterSpacing: "0.08em",
@@ -141,7 +141,7 @@ const SpotRate = () => {
             sx={{
               fontSize: {
                 xs: "22px",
-                md: "3.4vw",
+                md:isSilver?"3.4vw":"4vw",
               },
               fontWeight: 800,
               letterSpacing: "0.02em",
@@ -156,7 +156,7 @@ const SpotRate = () => {
 
         <Typography
           sx={{
-            fontSize: { xs: "12px", md: "1.3vw" },
+            fontSize: { xs: "12px", md:isSilver? "1.3vw":'2vw' },
             fontWeight: 600,
             color: "#8899A6",
             mt: "0.4vw",
@@ -199,8 +199,8 @@ const SpotRate = () => {
           },
           display: "grid",
           alignItems: "center",
-          gap: "1.8vw",
-          gridTemplateColumns: "1fr 1fr",
+          gap: isSilver?"0.8vw":".2vw .8vw",
+          gridTemplateColumns: isSilver ? '.8fr 1fr 1fr' : "1fr 1fr",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -234,11 +234,11 @@ const SpotRate = () => {
       >
         <Box
           sx={{
-            gridColumn: "span 2",
+            gridColumn: isSilver ? "span 1" : "span 2",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            // flexDirection: "column",
+            flexDirection:isSilver ? "column":"row",
             gap: "0.5vw",
             width: "100%",
           }}
@@ -246,8 +246,8 @@ const SpotRate = () => {
           <Box
             className="animate-float"
             sx={{
-              width: "6vw",
-              height: "6vw",
+              width: isSilver?"4vw":"6vw",
+              height: isSilver?"4vw":"6vw",
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
@@ -258,7 +258,7 @@ const SpotRate = () => {
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: "2.8vw" },
+              fontSize: { xs: "16px", md: isSilver ?"2vw" :"2.8vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
@@ -320,7 +320,7 @@ const SpotRate = () => {
         askDir={silverAskDir}
         theme="silver"
       />
-      
+
     </Box>
   );
 };

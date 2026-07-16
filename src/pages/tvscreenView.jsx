@@ -241,7 +241,7 @@ function TvScreen() {
         container
         spacing={10}
         minHeight="100%"
-        alignItems="flex-start"
+        alignItems="center"
         justifyContent="space-between"
         flexWrap="wrap"
         zIndex="1"
@@ -254,6 +254,7 @@ function TvScreen() {
           xs={12}
           md={6}
           display="flex"
+          height="100%"
           alignItems="center"
           flexDirection="column"
           justifyContent="spaceBetween"
