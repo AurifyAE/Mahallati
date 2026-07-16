@@ -60,29 +60,39 @@ const CommodityTable = ({ title, items }) => {
         const effectiveSpot = spot || goldData;
         if (!effectiveSpot) return null;
 
+        const spotBid = Number(effectiveSpot.bid);
+        const spotAsk = Number(effectiveSpot.ask);
+
+        // Check if live rates have loaded from the socket yet
+        const liveRatesLoaded = spotBid > 0 && spotAsk > 0;
+
         const mult = UNIT_MULTIPLIER[item.weight] || 1;
         const pur = purityFactor(item.purity);
         const unitValue = Number(item.unit) || 1;
 
-        const baseBid =
-          (effectiveSpot.bid / OUNCE) * AED * mult * unitValue * pur;
+        const baseBid = liveRatesLoaded
+          ? (spotBid / OUNCE) * AED * mult * unitValue * pur
+          : null;
 
-        const baseAsk =
-          (effectiveSpot.ask / OUNCE) * AED * mult * unitValue * pur;
+        const baseAsk = liveRatesLoaded
+          ? (spotAsk / OUNCE) * AED * mult * unitValue * pur
+          : null;
 
         return {
           metal_name: item.metal_name,
           purity: item.purity,
           metal: item.metal,
           unit: `${unitValue} ${item.weight}`,
-          bid:
-            baseBid +
-            (Number(item.buyCharge) || 0) +
-            (Number(item.buyPremium) || 0),
-          ask:
-            baseAsk +
-            (Number(item.sellCharge) || 0) +
-            (Number(item.sellPremium) || 0),
+          bid: liveRatesLoaded
+            ? baseBid +
+              (Number(item.buyCharge) || 0) +
+              (Number(item.buyPremium) || 0)
+            : null,
+          ask: liveRatesLoaded
+            ? baseAsk +
+              (Number(item.sellCharge) || 0) +
+              (Number(item.sellPremium) || 0)
+            : null,
         };
       })
       .filter(Boolean) ?? [];
