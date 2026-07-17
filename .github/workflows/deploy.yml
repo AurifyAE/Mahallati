@@ -30,6 +30,7 @@ jobs:
           VITE_APP_API_KEY: ${{ secrets.VITE_APP_API_KEY }}
           VITE_APP_ADMIN_ID: ${{ secrets.VITE_APP_ADMIN_ID }}
           VITE_APP_SOCKET_SECRET_KEY: ${{ secrets.VITE_APP_SOCKET_SECRET_KEY }}
+          VITE_TWELVEDATA_API_KEY: ${{ secrets.VITE_TWELVEDATA_API_KEY }}
 
       # 4. Prepare Mahallati folder
       - name: Prepare Mahallati folder
