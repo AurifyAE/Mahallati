@@ -236,7 +236,7 @@ const TableRow = ({ icon, name, price, change, isUp, isNeutral }) => {
         py: "0.75vw",
         px: "1.2vw",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-        backgroundColor: rowBg,
+        // backgroundColor: rowBg,
         transition: "background-color 0.3s ease",
         "&:last-child": {
           borderBottom: "none",
@@ -369,7 +369,7 @@ const CurrencyTable = () => {
     };
 
     fetchRates();
-    const interval = setInterval(fetchRates, 5 * 60 * 1000); // 5 minutes refresh
+    const interval = setInterval(fetchRates, 10 * 1000); // 30 seconds refresh
     return () => clearInterval(interval);
   }, []);
 
