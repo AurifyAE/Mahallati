@@ -1,5 +1,66 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
+import { useMarketData } from "../context/MarketDataContext";
+
+// ==================== Configuration List ====================
+// Define commodities and their Twelve Data symbols.
+// Rhodium (XRH/USD) is included with default fallbacks as it is not supported on the free API tier.
+const COMMODITY_CONFIG = [
+  {
+    id: "oil",
+    code: "WTI/USD",
+    name: "OIL (WTI)",
+    defaultPrice: 78.59,
+    defaultChange: 0.42,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+  {
+    id: "palladium",
+    code: "XPD/USD",
+    name: "PALLADIUM",
+    defaultPrice: 1032.45,
+    defaultChange: 0.28,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+  {
+    id: "platinum",
+    code: "XPT/USD",
+    name: "PLATINUM",
+    defaultPrice: 1087.3,
+    defaultChange: 0.36,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+  {
+    id: "rhodium",
+    code: "XRH/USD",
+    name: "RHODIUM",
+    defaultPrice: 5450.0,
+    defaultChange: 0.5,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+  {
+    id: "btc",
+    code: "BTC/USD",
+    name: "BTC USD",
+    defaultPrice: 63251.62,
+    defaultChange: 0.36,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+  {
+    id: "eth",
+    code: "ETH/USD",
+    name: "ETH USD",
+    defaultPrice: 3412.78,
+    defaultChange: 0.5,
+    defaultIsUp: true,
+    formatDecimals: 2,
+  },
+];
 
 // ==================== SVG Icons & Element boxes ====================
 
@@ -222,8 +283,32 @@ const TableHeader = ({ title }) => (
   </Box>
 );
 
-const TableRow = ({ icon, name, price, change, isUp }) => {
-  const changeColor = isUp ? "#85E374" : "#FF0040";
+const TableRow = ({ icon, name, price, change, isUp, isNeutral, rawPrice }) => {
+  const [flashType, setFlashType] = useState("neutral"); // "rise", "fall", "neutral"
+  const prevPriceRef = useRef(rawPrice);
+
+  useEffect(() => {
+    if (
+      prevPriceRef.current !== null &&
+      rawPrice !== null &&
+      prevPriceRef.current !== rawPrice
+    ) {
+      const type = rawPrice > prevPriceRef.current ? "rise" : "fall";
+      setFlashType(type);
+      const timer = setTimeout(() => setFlashType("neutral"), 1000);
+      return () => clearTimeout(timer);
+    }
+    prevPriceRef.current = rawPrice;
+  }, [rawPrice]);
+
+  let rowBg = "transparent";
+  if (flashType === "rise") {
+    rowBg = "rgba(77, 191, 0, 0.25)";
+  } else if (flashType === "fall") {
+    rowBg = "rgba(255, 0, 64, 0.25)";
+  }
+
+  const changeColor = isNeutral ? "#BAC8D9" : isUp ? "#85E374" : "#FF0040";
   const ArrowIcon = isUp ? ArrowUp : ArrowDown;
 
   return (
@@ -235,13 +320,22 @@ const TableRow = ({ icon, name, price, change, isUp }) => {
         py: "0.75vw",
         px: "1.2vw",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        backgroundColor: rowBg,
+        transition: "background-color 0.3s ease",
         "&:last-child": {
           borderBottom: "none",
         },
       }}
     >
       {/* Column 1: Icon and Name */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: "1vw", textAlign: "start" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1vw",
+          textAlign: "start",
+        }}
+      >
         <Box
           sx={{
             width: { xs: "24px", md: "2.2vw" },
@@ -299,44 +393,127 @@ const TableRow = ({ icon, name, price, change, isUp }) => {
         >
           {change}
         </Typography>
-        <ArrowIcon color={changeColor} />
+        {!isNeutral && <ArrowIcon color={changeColor} />}
       </Box>
     </Box>
   );
 };
 
-const CommodityTableNew = () => {
+const renderIcon = (id) => {
+  switch (id) {
+    case "oil":
+      return <OilIcon />;
+    case "palladium":
+      return <ElementIcon label="Pd" />;
+    case "platinum":
+      return <ElementIcon label="Pt" />;
+    case "rhodium":
+      return <ElementIcon label="Rh" />;
+    case "btc":
+      return <BitcoinIcon />;
+    case "eth":
+      return <EthereumIcon />;
+    default:
+      return null;
+  }
+};
+
+const StockCommodity = () => {
+  // Subscribe to the centralized market data context
+  const { rates, lastUpdated, fetchError } = useMarketData();
+
+  const formatPrice = (val, decimals) => {
+    if (val === null || val === undefined) return "—";
+    return val.toLocaleString(undefined, {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+  };
+
+  const formatChange = (val, isNeutral) => {
+    if (isNeutral) return "—";
+    const formatted = Math.abs(val).toFixed(2);
+    return val > 0 ? `+${formatted}%` : `-${formatted}%`;
+  };
+
+  if (!rates) {
+    return (
+      <PanelContainer>
+        <TableHeader title="COMMODITY" />
+        <Box
+          sx={{
+            py: "3vw",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            sx={{ color: "#BAC8D9", fontSize: "1.2vw", fontWeight: 500 }}
+          >
+            Loading Commodity Rates...
+          </Typography>
+        </Box>
+      </PanelContainer>
+    );
+  }
+
   return (
     <PanelContainer>
       <TableHeader title="COMMODITY" />
       <Box sx={{ mt: "0.4vw" }}>
-        <TableRow icon={<OilIcon />} name="OIL (WTI)" price="78.59" change="+0.42%" isUp={true} />
-        <TableRow
-          icon={<ElementIcon label="Pd" />}
-          name="PALLADIUM"
-          price="1,032.45"
-          change="+0.28%"
-          isUp={true}
-        />
-        <TableRow
-          icon={<ElementIcon label="Pt" />}
-          name="PLATINUM"
-          price="1,087.30"
-          change="+0.36%"
-          isUp={true}
-        />
-        <TableRow
-          icon={<ElementIcon label="Rh" />}
-          name="RHODIUM"
-          price="5,450.00"
-          change="+0.50%"
-          isUp={true}
-        />
-        <TableRow icon={<BitcoinIcon />} name="BTC USD" price="63,251.62" change="+0.36%" isUp={true} />
-        <TableRow icon={<EthereumIcon />} name="ETH USD" price="3,412.78" change="+0.50%" isUp={true} />
+        {COMMODITY_CONFIG.map((c) => {
+          const item = rates[c.id];
+          if (!item) return null;
+
+          return (
+            <TableRow
+              key={c.id}
+              icon={renderIcon(c.id)}
+              name={c.name}
+              price={formatPrice(item.price, c.formatDecimals)}
+              change={formatChange(item.change, item.isNeutral)}
+              isUp={item.isUp}
+              isNeutral={item.isNeutral}
+              rawPrice={item.price}
+            />
+          );
+        })}
+      </Box>
+
+      {/* Sync Status / Diagnostic labels */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "auto",
+          width: "20px",
+          aspectRatio: "1/1",
+          background: "rgba(231 188 45 / 0.26)",
+          opacity: 0.65,
+          position: "absolute",
+          right: "0",
+          top: "0",
+          borderRadius: "0 0 0 10px",
+        }}
+      >
+        {fetchError ? (
+          <Typography
+            sx={{ fontSize: "0.75vw", color: "#FF0040", fontWeight: 500 }}
+          >
+            ●
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ fontSize: "0.75vw", color: "#85E374", fontWeight: 500 }}
+          >
+            ●
+          </Typography>
+        )}
       </Box>
     </PanelContainer>
   );
 };
 
-export default CommodityTableNew;
+export default StockCommodity;

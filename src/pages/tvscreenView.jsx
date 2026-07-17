@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Grid, Paper, Typography, Box, useMediaQuery } from "@mui/material";
 import SpotRate from "../components/SpotRate";
-import CommodityTableNew from "../components/CommodityTableNew";
+import StockCommodity from "../components/StockCommodity";
 import NewsTicker from "../components/News";
 
 import {
@@ -126,7 +126,7 @@ function TvScreen() {
         socket.emit("request-data", symbols);
       });
 
-      socket.on("disconnect", () => { });
+      socket.on("disconnect", () => {});
 
       // socket.on("market-data", (data) => {
       //   if (data && data.symbol) {
@@ -261,7 +261,6 @@ function TvScreen() {
           padding="1vw"
           gap="1vw"
         >
-
           <Box
             sx={{
               height: "auto",
@@ -287,18 +286,15 @@ function TvScreen() {
             }}
           >
             <SystemClock />
- 
+
             <WorldClockHorizontal />
           </Box>
-
+          {/* <CommodityTable  /> */}
           <CurrencyTable />
-          <CommodityTable  />
-          <CommodityTableNew />
+          <StockCommodity />
         </Grid>
 
-
-
-{/* 
+        {/* 
         <Grid
           md={12}
           sx={{
