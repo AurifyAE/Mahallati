@@ -28,10 +28,14 @@ export const MarketDataProvider = ({ children }) => {
   const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
+    let active = true;
+    let timerId;
+
     const fetchMarketData = async () => {
       try {
         console.log("MarketContext: Fetching unified Twelve Data quote package...");
         const data = await getMarketData();
+        if (!active) return;
         console.log("MarketContext: Fetch successful:", data);
         setFetchError(null);
 
@@ -71,6 +75,7 @@ export const MarketDataProvider = ({ children }) => {
 
         setLastUpdated(new Date());
       } catch (err) {
+        if (!active) return;
         console.error("MarketContext: Combined fetch failed, using fallback data:", err);
         setFetchError(err.message || "Failed to fetch live market data");
 
@@ -93,10 +98,21 @@ export const MarketDataProvider = ({ children }) => {
       }
     };
 
-    fetchMarketData();
+    // Debounce the initial fetch by 100ms. In React StrictMode (development),
+    // components are double-mounted. Debouncing clears the first mount's timer,
+    // firing exactly one API call and preventing a 429 rate limit error on boot.
+    timerId = setTimeout(() => {
+      fetchMarketData();
+    }, 100);
+
     // 2-minute refresh is optimal for free API limits (taking 4 credits/minute on average)
     const interval = setInterval(fetchMarketData, 2 * 60 * 1000); 
-    return () => clearInterval(interval);
+
+    return () => {
+      active = false;
+      clearTimeout(timerId);
+      clearInterval(interval);
+    };
   }, []);
 
   return (

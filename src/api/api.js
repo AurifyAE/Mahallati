@@ -12,7 +12,6 @@ export const fetchSpotRates = (adminId) => {
 export const fetchServerURL = async () => {
     try {
         const response = await axiosInstance.get('/get-server');
-        console.log('response',response);
         return response;
         
     } catch (error) {
