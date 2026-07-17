@@ -105,8 +105,8 @@ export const MarketDataProvider = ({ children }) => {
       fetchMarketData();
     }, 100);
 
-    // 2-minute refresh is optimal for free API limits (taking 4 credits/minute on average)
-    const interval = setInterval(fetchMarketData, 2 * 60 * 1000); 
+    // 15-minute refresh is mathematically safe for 24/7 free tier (consuming 768 of 800 daily credits)
+    const interval = setInterval(fetchMarketData, 15 * 60 * 1000); 
 
     return () => {
       active = false;
