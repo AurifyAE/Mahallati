@@ -1,5 +1,40 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Typography } from "@mui/material";
+import { getCurrencyRates } from "../services/currencyService";
+
+// ==================== Configuration List ====================
+const CURRENCY_CONFIG = [
+  { 
+    id: "usd", 
+    code: "USD", 
+    name: "USD / AED", 
+    flag: "/images/usa.png", 
+    isCustomFlag: false, 
+    defaultPrice: 3.6725, 
+    defaultChange: 0.0023, 
+    defaultIsUp: true 
+  },
+  { 
+    id: "eur", 
+    code: "EUR", 
+    name: "EUR / AED", 
+    flag: "EU", 
+    isCustomFlag: true, 
+    defaultPrice: 4.2541, 
+    defaultChange: -0.0018, 
+    defaultIsUp: false 
+  },
+  { 
+    id: "gbp", 
+    code: "GBP", 
+    name: "GBP / AED", 
+    flag: "/images/uk.png", 
+    isCustomFlag: false, 
+    defaultPrice: 4.9573, 
+    defaultChange: 0.0035, 
+    defaultIsUp: true 
+  },
+];
 
 // ==================== SVG Icons & Flags ====================
 
@@ -169,9 +204,28 @@ const TableHeader = ({ title }) => (
   </Box>
 );
 
-const TableRow = ({ icon, name, price, change, isUp }) => {
-  const changeColor = isUp ? "#85E374" : "#FF0040";
-  const ArrowIcon = isUp ? ArrowUp : ArrowDown;
+const TableRow = ({ icon, name, price, change, isUp, isNeutral }) => {
+  const [flashType, setFlashType] = useState("neutral"); // "rise", "fall", "neutral"
+  const prevPriceRef = useRef(price);
+
+  useEffect(() => {
+    if (prevPriceRef.current !== null && price !== null && prevPriceRef.current !== price) {
+      const type = price > prevPriceRef.current ? "rise" : "fall";
+      setFlashType(type);
+      const timer = setTimeout(() => setFlashType("neutral"), 1000);
+      return () => clearTimeout(timer);
+    }
+    prevPriceRef.current = price;
+  }, [price]);
+
+  let rowBg = "transparent";
+  if (flashType === "rise") {
+    rowBg = "rgba(77, 191, 0, 0.25)";
+  } else if (flashType === "fall") {
+    rowBg = "rgba(255, 0, 64, 0.25)";
+  }
+
+  const changeColor = isNeutral ? "#BAC8D9" : isUp ? "#85E374" : "#FF0040";
 
   return (
     <Box
@@ -182,6 +236,8 @@ const TableRow = ({ icon, name, price, change, isUp }) => {
         py: "0.75vw",
         px: "1.2vw",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        backgroundColor: rowBg,
+        transition: "background-color 0.3s ease",
         "&:last-child": {
           borderBottom: "none",
         },
@@ -223,7 +279,7 @@ const TableRow = ({ icon, name, price, change, isUp }) => {
           fontVariantNumeric: "tabular-nums",
         }}
       >
-        {price}
+        {price ? price.toFixed(4) : "—"}
       </Typography>
 
       {/* Column 3: Change and Arrow */}
@@ -246,53 +302,130 @@ const TableRow = ({ icon, name, price, change, isUp }) => {
         >
           {change}
         </Typography>
-        <ArrowIcon color={changeColor} />
+        {!isNeutral && (
+          isUp ? <ArrowUp color={changeColor} /> : <ArrowDown color={changeColor} />
+        )}
       </Box>
     </Box>
   );
 };
 
 const CurrencyTable = () => {
+  const [rates, setRates] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [fetchError, setFetchError] = useState(null);
+
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        console.log("Currency Module: Fetching exchange rates from service...");
+        const ratesData = await getCurrencyRates();
+        console.log("Currency Module: Rates successfully fetched:", ratesData);
+        
+        setFetchError(null);
+
+        setRates((prev) => {
+          const nextRates = {};
+
+          CURRENCY_CONFIG.forEach((currency) => {
+            const { id, defaultPrice, defaultChange, defaultIsUp } = currency;
+            const apiItem = ratesData[id];
+            
+            const livePrice = apiItem ? apiItem.price : defaultPrice;
+            const liveChange = apiItem ? apiItem.change : defaultChange;
+
+            nextRates[id] = {
+              price: livePrice,
+              change: liveChange,
+              isUp: liveChange > 0,
+              isNeutral: liveChange === 0,
+            };
+          });
+
+          return nextRates;
+        });
+        setLastUpdated(new Date());
+      } catch (err) {
+        console.error("Currency Module: API updates failed. Fallback triggered.", err);
+        setFetchError(err.message || "Failed to fetch live rates");
+        
+        // Resiliency Fallback: if the first load fails, load the default merchant values so the UI doesn't remain blank.
+        setRates((prev) => {
+          if (!prev) {
+            const fallbackRates = {};
+            CURRENCY_CONFIG.forEach((c) => {
+              fallbackRates[c.id] = {
+                price: c.defaultPrice,
+                change: c.defaultChange,
+                isUp: c.defaultIsUp,
+                isNeutral: false,
+              };
+            });
+            return fallbackRates;
+          }
+          return prev;
+        });
+      }
+    };
+
+    fetchRates();
+    const interval = setInterval(fetchRates, 5 * 60 * 1000); // 5 minutes refresh
+    return () => clearInterval(interval);
+  }, []);
+
+  const formatChange = (val, isNeutral) => {
+    if (isNeutral) return "—";
+    const formatted = Math.abs(val).toFixed(4);
+    return val > 0 ? `+${formatted}` : `-${formatted}`;
+  };
+
+  if (!rates) {
+    return (
+      <PanelContainer>
+        <TableHeader title="CURRENCY" />
+        <Box sx={{ py: "3vw", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Typography sx={{ color: "#BAC8D9", fontSize: "1.2vw", fontWeight: 500 }}>
+            Loading Exchange Rates...
+          </Typography>
+        </Box>
+      </PanelContainer>
+    );
+  }
+
   return (
     <PanelContainer>
       <TableHeader title="CURRENCY" />
       <Box sx={{ mt: "0.4vw" }}>
-        <TableRow
-          icon={
+        {CURRENCY_CONFIG.map((c) => {
+          const item = rates[c.id];
+          if (!item) return null;
+
+          const flagIcon = c.isCustomFlag && c.flag === "EU" ? (
+            <EUFlag />
+          ) : (
             <Box
               component="img"
-              src="/images/usa.png"
-              alt="USA"
+              src={c.flag}
+              alt={c.name}
               sx={{ width: "100%", height: "auto", borderRadius: "1px" }}
             />
-          }
-          name="USD / AED"
-          price="3.6725"
-          change="+0.0023"
-          isUp={true}
-        />
-        <TableRow
-          icon={<EUFlag />}
-          name="EUR / AED"
-          price="4.2541"
-          change="-0.0018"
-          isUp={false}
-        />
-        <TableRow
-          icon={
-            <Box
-              component="img"
-              src="/images/uk.png"
-              alt="UK"
-              sx={{ width: "100%", height: "auto", borderRadius: "1px" }}
+          );
+
+          return (
+            <TableRow
+              key={c.id}
+              icon={flagIcon}
+              name={c.name}
+              price={item.price}
+              change={formatChange(item.change, item.isNeutral)}
+              isUp={item.isUp}
+              isNeutral={item.isNeutral}
             />
-          }
-          name="GBP / AED"
-          price="4.9573"
-          change="+0.0035"
-          isUp={true}
-        />
+          );
+        })}
       </Box>
+
+     
     </PanelContainer>
   );
 };
