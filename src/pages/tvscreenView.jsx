@@ -260,6 +260,7 @@ function TvScreen() {
           flexDirection="column"
           justifyContent="spaceBetween"
           padding="1vw"
+          marginTop="7.5vw"
           gap="1vw"
         >
         
