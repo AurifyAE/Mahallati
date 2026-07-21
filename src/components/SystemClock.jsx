@@ -37,8 +37,9 @@ const SystemClock = () => {
         "DEC",
       ];
 
-      const dateStr = `${String(now.getDate()).padStart(2, "0")} ${MONTHS[now.getMonth()]
-        } ${now.getFullYear()}`;
+      const dateStr = `${String(now.getDate()).padStart(2, "0")} ${
+        MONTHS[now.getMonth()]
+      } ${now.getFullYear()}`;
 
       const timeStr = now.toLocaleTimeString("en-US", {
         hour: "2-digit",
@@ -73,26 +74,13 @@ const SystemClock = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "1vw",
+          // gap: "1vw",
           width: "100%",
           padding: "0vw 2.5vw",
           borderRadius: "20px",
+          flexDirection: "column",
         }}
       >
-        {/* Date */}
-        <Typography
-          sx={{
-            fontSize: {
-              xs: "12px",
-              sm: "2vw",
-            },
-            fontWeight: 600,
-            letterSpacing: "2px",
-            color: "#E5C583", // Champagne Gold
-          }}
-        >
-          {timeData.date || "-- --- ----"}
-        </Typography>
         {/* Day */}
         <Typography
           sx={{
@@ -106,6 +94,20 @@ const SystemClock = () => {
           }}
         >
           {timeData.day || "-----"}
+        </Typography>
+        {/* Date */}
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "12px",
+              sm: "2vw",
+            },
+            fontWeight: 600,
+            letterSpacing: "2px",
+            color: "#E5C583", // Champagne Gold
+          }}
+        >
+          {timeData.date || "-- --- ----"}
         </Typography>
       </Box>
     </Box>

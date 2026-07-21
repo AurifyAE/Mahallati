@@ -231,6 +231,7 @@ function TvScreen() {
             height: "100%",
             width: "100%",
             objectFit: "cover",
+            // transform: "scaleX(-1)",
           }}
         />
       </Box>
@@ -261,15 +262,7 @@ function TvScreen() {
           padding="1vw"
           gap="1vw"
         >
-          <Box
-            sx={{
-              height: "auto",
-              width: { xs: "40vw", sm: "25vw" },
-              marginBottom: { xs: "20px", sm: "0vw" },
-            }}
-          >
-            <img src={mainLogo} alt="" className="object-contain w-full" />
-          </Box>
+        
           <SpotRate />
         </Grid>
         {/* Side: SpotRate & Date Time */}
@@ -285,12 +278,21 @@ function TvScreen() {
               gap: "1vw",
             }}
           >
+              <Box
+            sx={{
+              height: "auto",
+              width: { xs: "40vw", sm: "25vw" },
+              marginBottom: { xs: "20px", sm: "0vw" },
+            }}
+          >
+            <img src={mainLogo} alt="" className="object-contain w-full" />
+          </Box>
             <SystemClock />
 
             <WorldClockHorizontal />
           </Box>
           {/* <CommodityTable  /> */}
-          <CurrencyTable />
+          {/* <CurrencyTable /> */}
           <StockCommodity />
         </Grid>
 
