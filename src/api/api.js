@@ -35,3 +35,9 @@ export const fetchTVScreenData = (adminId) => {
 export const fetchScreenSliders = (adminId) => {
     return axiosInstance.get(`/tv-sliders/${adminId}`);
 };
+
+// Fetch stock commodities by adminId
+export const fetchStockCommodities = (adminId) => {
+    return axiosInstance.get(`/get-stock-commodities/${adminId}`);
+};
+
