@@ -169,33 +169,9 @@ const TableHeader = () => (
   </Box>
 );
 
-// ==================== Table Row with Flash Animations ====================
+// ==================== Table Row ====================
 
-const TableRow = ({ name, price, change, isUp, isNeutral, rawPrice }) => {
-  const [flashType, setFlashType] = useState("neutral");
-  const prevPriceRef = useRef(rawPrice);
-
-  useEffect(() => {
-    if (
-      prevPriceRef.current !== null &&
-      rawPrice !== null &&
-      prevPriceRef.current !== rawPrice
-    ) {
-      const type = rawPrice > prevPriceRef.current ? "rise" : "fall";
-      setFlashType(type);
-      const timer = setTimeout(() => setFlashType("neutral"), 1000);
-      return () => clearTimeout(timer);
-    }
-    prevPriceRef.current = rawPrice;
-  }, [rawPrice]);
-
-  let rowBg = "transparent";
-  if (flashType === "rise") {
-    rowBg = "rgba(77, 191, 0, 0.25)";
-  } else if (flashType === "fall") {
-    rowBg = "rgba(255, 0, 64, 0.25)";
-  }
-
+const TableRow = ({ name, price, change, isUp, isNeutral }) => {
   const changeColor = isNeutral ? "#BAC8D9" : isUp ? "#85E374" : "#FF0040";
   const ArrowIcon = isUp ? ArrowUp : ArrowDown;
 
@@ -208,8 +184,6 @@ const TableRow = ({ name, price, change, isUp, isNeutral, rawPrice }) => {
         py: "0.75vw",
         px: "1.2vw",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-        backgroundColor: rowBg,
-        transition: "background-color 0.3s ease",
         "&:last-child": {
           borderBottom: "none",
         },
@@ -381,6 +355,12 @@ const StockCommodityTable = ({
       let changePercent = null;
       if (data?.change !== undefined && data?.change !== null) {
         changePercent = parseFloat(data.change);
+      } else if (data?.chg !== undefined && data?.chg !== null) {
+        changePercent = parseFloat(data.chg);
+      } else if (data?.changePercent !== undefined && data?.changePercent !== null) {
+        changePercent = parseFloat(data.changePercent);
+      } else if (data?.ch !== undefined && data?.ch !== null) {
+        changePercent = parseFloat(data.ch);
       } else if (
         priceUSD !== undefined &&
         prevUSD !== undefined &&
@@ -389,8 +369,16 @@ const StockCommodityTable = ({
         changePercent = ((priceUSD - prevUSD) / prevUSD) * 100;
       }
 
-      const isUp = changePercent !== null ? changePercent > 0 : false;
-      const isNeutral = changePercent === null || changePercent === 0;
+      let isUp = false;
+      let isNeutral = true;
+
+      if (changePercent !== null && !isNaN(changePercent)) {
+        isUp = changePercent > 0;
+        isNeutral = changePercent === 0;
+      } else if (data?.isUp !== undefined) {
+        isUp = Boolean(data.isUp);
+        isNeutral = false;
+      }
 
       return {
         key,
