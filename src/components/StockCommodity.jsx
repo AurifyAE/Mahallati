@@ -305,7 +305,9 @@ const StockCommodityTable = ({
         (key && marketData[key.toUpperCase()]) ||
         (key && marketData[key.toLowerCase()]);
 
-      const priceUSD = data?.bid
+      const priceUSD = data?.offer
+        ? parseFloat(data.offer)
+        : data?.bid
         ? parseFloat(data.bid)
         : data?.price
         ? parseFloat(data.price)
@@ -364,7 +366,9 @@ const StockCommodityTable = ({
         (key && marketData[key.toUpperCase()]) ||
         (key && marketData[key.toLowerCase()]);
 
-      const priceUSD = data?.bid
+      const priceUSD = data?.offer
+        ? parseFloat(data.offer)
+        : data?.bid
         ? parseFloat(data.bid)
         : data?.price
         ? parseFloat(data.price)
