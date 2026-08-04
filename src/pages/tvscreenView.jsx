@@ -9,6 +9,7 @@ import {
   fetchServerURL,
   fetchNews,
   fetchTVScreenData,
+  fetchStockCommodities,
 } from "../api/api";
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
@@ -17,6 +18,7 @@ import SystemClock from "../components/SystemClock";
 import WorldClockHorizontal from "../components/WorldClock";
 import CurrencyTable from "../components/CurrencyTable";
 import CommodityTable from "../components/CommodityTable";
+import StockCommodityTable, { getStockCommoditySocketSymbols } from "../components/StockCommodity";
 
 function TvScreen() {
   const [showLimitModal, setShowLimitModal] = useState(false);
@@ -30,6 +32,7 @@ function TvScreen() {
   const [silverBidSpread, setSilverBidSpread] = useState("");
   const [silverAskSpread, setSilverAskSpread] = useState("");
   const [symbols, setSymbols] = useState(["GOLD", "SILVER"]);
+  const [selectedStockCommodities, setSelectedStockCommodities] = useState([]);
   const [error, setError] = useState(null);
 
   const { updateMarketData } = useSpotRate();
@@ -62,10 +65,11 @@ function TvScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [spotRatesRes, serverURLRes, newsRes] = await Promise.all([
+        const [spotRatesRes, serverURLRes, newsRes, stockCommoditiesRes] = await Promise.all([
           fetchSpotRates(adminId),
           fetchServerURL(),
           fetchNews(adminId),
+          fetchStockCommodities(adminId),
         ]);
 
         // Handle Spot Rates
@@ -73,7 +77,7 @@ function TvScreen() {
           commodities,
           goldBidSpread,
           goldAskSpread,
-          silverBidSpread,
+          silverBidSpread,  
           silverAskSpread,
         } = spotRatesRes.data.info;
         setCommodities(commodities);
@@ -88,6 +92,11 @@ function TvScreen() {
 
         // Handle News
         setNews(newsRes.data.news.news);
+
+        // Handle Stock Commodities
+        if (stockCommoditiesRes?.data?.success) {
+          setSelectedStockCommodities(stockCommoditiesRes.data.selectedStockCommodities || []);
+        }
       } catch (error) {
         setError("An error occurred while fetching data");
       }
@@ -111,6 +120,35 @@ function TvScreen() {
           alert("An unexpected error occurred.");
         }
       });
+  }, [adminId]);
+
+  // When selectedStockCommodities change, add their socket symbols to the subscription
+  useEffect(() => {
+    if (selectedStockCommodities.length > 0) {
+      const stockSymbols = getStockCommoditySocketSymbols(selectedStockCommodities);
+      setSymbols((prev) => {
+        const merged = [...new Set([...prev, ...stockSymbols])];
+        return merged;
+      });
+    }
+  }, [selectedStockCommodities]);
+
+  // Polling stock commodities so dashboard edits reflect automatically in real-time
+  useEffect(() => {
+    if (!adminId) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetchStockCommodities(adminId);
+        if (res?.data?.success) {
+          setSelectedStockCommodities(res.data.selectedStockCommodities || []);
+        }
+      } catch (err) {
+        // Silent catch for background polling
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, [adminId]);
 
   // Function to Fetch Market Data Using Socket
@@ -263,7 +301,6 @@ function TvScreen() {
           marginTop="7.5vw"
           gap="1vw"
         >
-        
           <SpotRate />
         </Grid>
         {/* Side: SpotRate & Date Time */}
@@ -279,22 +316,25 @@ function TvScreen() {
               gap: "1vw",
             }}
           >
-              <Box
-            sx={{
-              height: "auto",
-              width: { xs: "40vw", sm: "25vw" },
-              marginBottom: { xs: "20px", sm: "0vw" },
-            }}
-          >
-            <img src={mainLogo} alt="" className="object-contain w-full" />
-          </Box>
+            <Box
+              sx={{
+                height: "auto",
+                width: { xs: "40vw", sm: "25vw" },
+                marginBottom: { xs: "20px", sm: "0vw" },
+              }}
+            >
+              <img src={mainLogo} alt="" className="object-contain w-full" />
+            </Box>
             <SystemClock />
 
             <WorldClockHorizontal />
           </Box>
           {/* <CommodityTable  /> */}
           {/* <CurrencyTable /> */}
-          <StockCommodity />
+          <StockCommodityTable
+            selectedStockCommodities={selectedStockCommodities}
+            marketData={marketData}
+          />
         </Grid>
 
         {/* 

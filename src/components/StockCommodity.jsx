@@ -1,68 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Typography } from "@mui/material";
-import { useMarketData } from "../context/MarketDataContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 
-// ==================== Configuration List ====================
-// Define commodities and their Twelve Data symbols.
-// Rhodium (XRH/USD) is included with default fallbacks as it is not supported on the free API tier.
-const COMMODITY_CONFIG = [
-  {
-    id: "oil",
-    code: "WTI/USD",
-    name: "OIL (WTI)",
-    defaultPrice: 78.59,
-    defaultChange: 0.42,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-  {
-    id: "palladium",
-    code: "XPD/USD",
-    name: "PALLADIUM",
-    defaultPrice: 1032.45,
-    defaultChange: 0.28,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-  {
-    id: "platinum",
-    code: "XPT/USD",
-    name: "PLATINUM",
-    defaultPrice: 1087.3,
-    defaultChange: 0.36,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-  {
-    id: "rhodium",
-    code: "XRH/USD",
-    name: "RHODIUM",
-    defaultPrice: 5450.0,
-    defaultChange: 0.5,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-  {
-    id: "btc",
-    code: "BTC/USD",
-    name: "BTC USD",
-    defaultPrice: 63251.62,
-    defaultChange: 0.36,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-  {
-    id: "eth",
-    code: "ETH/USD",
-    name: "ETH USD",
-    defaultPrice: 3412.78,
-    defaultChange: 0.5,
-    defaultIsUp: true,
-    formatDecimals: 2,
-  },
-];
+import "swiper/css";
+import "swiper/css/autoplay";
 
-// ==================== SVG Icons & Element boxes ====================
+// Helper to get socket symbols directly from API returned items for request-data subscription
+export const getStockCommoditySocketSymbols = (selectedItems = []) => {
+  const symbols = [];
+  selectedItems.forEach((item) => {
+    if (typeof item === "object" && item !== null) {
+      if (item.socketSymbol && !symbols.includes(item.socketSymbol)) {
+        symbols.push(item.socketSymbol);
+      }
+      if (item.marketDataKey && !symbols.includes(item.marketDataKey)) {
+        symbols.push(item.marketDataKey);
+      }
+      if (item.key && !symbols.includes(item.key.toUpperCase())) {
+        symbols.push(item.key.toUpperCase());
+      }
+    } else if (typeof item === "string") {
+      const upper = item.toUpperCase();
+      if (!symbols.includes(upper)) {
+        symbols.push(upper);
+      }
+    }
+  });
+  return symbols;
+};
+
+// ==================== SVG Icons ====================
 
 const ArrowUp = ({ color }) => (
   <Box
@@ -108,89 +76,7 @@ const ArrowDown = ({ color }) => (
   </Box>
 );
 
-const OilIcon = () => (
-  <Box
-    component="svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    sx={{
-      width: { xs: "14px", md: "1.3vw" },
-      height: { xs: "14px", md: "1.3vw" },
-      color: "#ffffff",
-      display: "block",
-    }}
-  >
-    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-  </Box>
-);
-
-const ElementIcon = ({ label }) => (
-  <Box
-    sx={{
-      width: { xs: "22px", md: "1.8vw" },
-      height: { xs: "22px", md: "1.8vw" },
-      border: "1px solid rgba(255, 255, 255, 0.35)",
-      borderRadius: "4px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "rgba(6, 18, 14, 0.8)",
-    }}
-  >
-    <Typography
-      sx={{
-        fontSize: { xs: "9px", md: "0.8vw" },
-        fontWeight: 700,
-        color: "#BAC8D9",
-        lineHeight: 1,
-        fontFamily: "'Gilda Display', serif",
-      }}
-    >
-      {label}
-    </Typography>
-  </Box>
-);
-
-const BitcoinIcon = () => (
-  <Box
-    component="svg"
-    viewBox="0 0 32 32"
-    sx={{
-      width: { xs: "18px", md: "1.5vw" },
-      height: { xs: "18px", md: "1.5vw" },
-      display: "block",
-    }}
-  >
-    <circle cx="16" cy="16" r="16" fill="#f7931a" />
-    <path
-      d="M22.25 14.3c.42-2.8-1.72-4.31-4.64-5.32l.95-3.8-2.31-.58-.93 3.72c-.61-.15-1.23-.29-1.85-.43l.93-3.73-2.31-.57-.95 3.8c-.5-.11-1-.23-1.49-.35l.01-.04-3.19-.8-.62 2.47s1.71.39 1.68.42c.94.23 1.1.85 1.08 1.35l-1.08 4.33c.07.02.15.04.23.06-.08-.02-.15-.04-.23-.06l-1.52 6.08c-.11.28-.41.7-.1.7c.03.03-1.68-.42-1.68-.42l-1.15 2.64 3.01.75c.56.14 1.11.29 1.66.42l-.95 3.82 2.31.58.95-3.81c.63.17 1.24.33 1.84.48l-.94 3.78 2.31.58.95-3.83c3.94.75 6.9.45 8.15-3.12.99-2.87-.05-4.52-2.12-5.6 1.5-.35 2.63-1.34 2.93-3.39zm-5.23 7.37c-.71 2.87-5.55 1.32-7.11.93l1.45-5.8c1.57.39 6.4 1.17 5.66 4.87zm.72-7.42c-.65 2.61-4.68 1.29-5.98.96l1.32-5.3c1.3.33 5.34.94 4.66 4.34z"
-      fill="#fff"
-    />
-  </Box>
-);
-
-const EthereumIcon = () => (
-  <Box
-    component="svg"
-    viewBox="0 0 784 1277"
-    sx={{
-      width: { xs: "12px", md: "1.1vw" },
-      height: { xs: "18px", md: "1.6vw" },
-      display: "block",
-    }}
-  >
-    <g fill="none" fillRule="evenodd">
-      <path fill="#C0C0C0" d="M392 0L0 649l392 232V0z" />
-      <path fill="#EAEAEA" d="M392 0v881l392-232L392 0z" />
-      <path fill="#A0A0A0" d="M392 956L0 727l392 550V956z" />
-      <path fill="#C0C0C0" d="M392 1277v-321l392-229-392 550z" />
-      <path fill="#808080" d="M392 881L0 649l392 78V881z" />
-      <path fill="#A0A0A0" d="M392 881v75l392-75-392 0z" />
-    </g>
-  </Box>
-);
-
-// ==================== Reusable Glass Panel ====================
+// ==================== Glass Panel Container ====================
 
 const PanelContainer = ({ children }) => (
   <Box
@@ -207,7 +93,7 @@ const PanelContainer = ({ children }) => (
         content: '""',
         position: "absolute",
         inset: 0,
-        padding: "1px", // border thickness
+        padding: "1px",
         borderRadius: "inherit",
         background: `
           linear-gradient(
@@ -231,9 +117,9 @@ const PanelContainer = ({ children }) => (
   </Box>
 );
 
-// ==================== Reusable Table Components ====================
+// ==================== Table Header ====================
 
-const TableHeader = ({ title }) => (
+const TableHeader = () => (
   <Box
     sx={{
       display: "grid",
@@ -253,7 +139,7 @@ const TableHeader = ({ title }) => (
         textAlign: "start",
       }}
     >
-      {title}
+      COMMODITY
     </Typography>
 
     <Typography
@@ -283,31 +169,9 @@ const TableHeader = ({ title }) => (
   </Box>
 );
 
-const TableRow = ({ icon, name, price, change, isUp, isNeutral, rawPrice }) => {
-  const [flashType, setFlashType] = useState("neutral"); // "rise", "fall", "neutral"
-  const prevPriceRef = useRef(rawPrice);
+// ==================== Table Row ====================
 
-  useEffect(() => {
-    if (
-      prevPriceRef.current !== null &&
-      rawPrice !== null &&
-      prevPriceRef.current !== rawPrice
-    ) {
-      const type = rawPrice > prevPriceRef.current ? "rise" : "fall";
-      setFlashType(type);
-      const timer = setTimeout(() => setFlashType("neutral"), 1000);
-      return () => clearTimeout(timer);
-    }
-    prevPriceRef.current = rawPrice;
-  }, [rawPrice]);
-
-  let rowBg = "transparent";
-  if (flashType === "rise") {
-    rowBg = "rgba(77, 191, 0, 0.25)";
-  } else if (flashType === "fall") {
-    rowBg = "rgba(255, 0, 64, 0.25)";
-  }
-
+const TableRow = ({ name, price, change, isUp, isNeutral }) => {
   const changeColor = isNeutral ? "#BAC8D9" : isUp ? "#85E374" : "#FF0040";
   const ArrowIcon = isUp ? ArrowUp : ArrowDown;
 
@@ -320,45 +184,23 @@ const TableRow = ({ icon, name, price, change, isUp, isNeutral, rawPrice }) => {
         py: "0.75vw",
         px: "1.2vw",
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-        backgroundColor: rowBg,
-        transition: "background-color 0.3s ease",
         "&:last-child": {
           borderBottom: "none",
         },
       }}
     >
-      {/* Column 1: Icon and Name */}
-      <Box
+      {/* Column 1: Commodity Name */}
+      <Typography
         sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1vw",
+          fontSize: { xs: "13px", md: "1.3vw" },
+          fontWeight: 600,
+          color: "#EAEFF5",
+          letterSpacing: "0.02em",
           textAlign: "start",
         }}
       >
-        <Box
-          sx={{
-            width: { xs: "24px", md: "2.2vw" },
-            height: { xs: "16px", md: "1.5vw" },
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            flexShrink: 0,
-          }}
-        >
-          {icon}
-        </Box>
-        <Typography
-          sx={{
-            fontSize: { xs: "13px", md: "1.3vw" },
-            fontWeight: 600,
-            color: "#EAEFF5",
-            letterSpacing: "0.02em",
-          }}
-        >
-          {name}
-        </Typography>
-      </Box>
+        {name}
+      </Typography>
 
       {/* Column 2: Price */}
       <Typography
@@ -399,121 +241,220 @@ const TableRow = ({ icon, name, price, change, isUp, isNeutral, rawPrice }) => {
   );
 };
 
-const renderIcon = (id) => {
-  switch (id) {
-    case "oil":
-      return <OilIcon />;
-    case "palladium":
-      return <ElementIcon label="Pd" />;
-    case "platinum":
-      return <ElementIcon label="Pt" />;
-    case "rhodium":
-      return <ElementIcon label="Rh" />;
-    case "btc":
-      return <BitcoinIcon />;
-    case "eth":
-      return <EthereumIcon />;
-    default:
-      return null;
-  }
-};
+// ==================== Main Component ====================
 
-const StockCommodity = () => {
-  // Subscribe to the centralized market data context
-  const { rates, lastUpdated, fetchError } = useMarketData();
+const StockCommodityTable = ({
+  selectedStockCommodities = [],
+  marketData = {},
+}) => {
+  const prevPricesRef = useRef({});
+  const [prevPricesState, setPrevPricesState] = useState({});
 
-  const formatPrice = (val, decimals) => {
-    if (val === null || val === undefined) return "—";
-    return val.toLocaleString(undefined, {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkWidth = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
+
+  useEffect(() => {
+    let changed = false;
+    const nextPrevPrices = { ...prevPricesState };
+
+    selectedStockCommodities.forEach((item) => {
+      const key = typeof item === "object" ? item.key : item;
+      const socketSymbol = typeof item === "object" ? item.socketSymbol : null;
+      const marketDataKey = typeof item === "object" ? item.marketDataKey : null;
+
+      const data =
+        (socketSymbol && marketData[socketSymbol]) ||
+        (marketDataKey && marketData[marketDataKey]) ||
+        marketData[key] ||
+        (key && marketData[key.toUpperCase()]) ||
+        (key && marketData[key.toLowerCase()]);
+
+      const priceUSD = data?.offer
+        ? parseFloat(data.offer)
+        : data?.bid
+        ? parseFloat(data.bid)
+        : data?.price
+        ? parseFloat(data.price)
+        : data?.ask
+        ? parseFloat(data.ask)
+        : undefined;
+
+      const cachedPrice = prevPricesRef.current[key];
+
+      if (priceUSD !== undefined && priceUSD !== cachedPrice) {
+        if (cachedPrice !== undefined) {
+          nextPrevPrices[key] = cachedPrice;
+          changed = true;
+        }
+        prevPricesRef.current[key] = priceUSD;
+      }
+    });
+
+    if (changed) {
+      setPrevPricesState(nextPrevPrices);
+    }
+  }, [marketData, selectedStockCommodities]);
+
+  const formatPrice = (val, decimals = 2) => {
+    if (val === null || val === undefined || isNaN(val)) return "—";
+    return val.toLocaleString("en-US", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     });
   };
 
-  const formatChange = (val, isNeutral) => {
-    if (isNeutral) return "—";
+  const formatChange = (val) => {
+    if (val === null || val === undefined || isNaN(val)) return "—";
     const formatted = Math.abs(val).toFixed(2);
-    return val > 0 ? `+${formatted}%` : `-${formatted}%`;
+    return val > 0 ? `+${formatted}%` : val < 0 ? `-${formatted}%` : "—";
   };
 
-  if (!rates) {
-    return (
-      <PanelContainer>
-        <TableHeader title="COMMODITY" />
-        <Box
-          sx={{
-            py: "3vw",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            sx={{ color: "#BAC8D9", fontSize: "1.2vw", fontWeight: 500 }}
-          >
-            Loading Commodity Rates...
-          </Typography>
-        </Box>
-      </PanelContainer>
-    );
-  }
+  // Construct rows purely from API-fetched commodity objects and live marketData
+  const rows = selectedStockCommodities
+    .map((item) => {
+      const key = typeof item === "object" ? item.key : item;
+      const name =
+        typeof item === "object" && item.name
+          ? item.name
+          : key ? key.replace(/_/g, " ").toUpperCase() : "";
+      const decimals =
+        typeof item === "object" && item.decimals ? item.decimals : 2;
+
+      const socketSymbol = typeof item === "object" ? item.socketSymbol : null;
+      const marketDataKey = typeof item === "object" ? item.marketDataKey : null;
+
+      const data =
+        (socketSymbol && marketData[socketSymbol]) ||
+        (marketDataKey && marketData[marketDataKey]) ||
+        marketData[key] ||
+        (key && marketData[key.toUpperCase()]) ||
+        (key && marketData[key.toLowerCase()]);
+
+      const priceUSD = data?.offer
+        ? parseFloat(data.offer)
+        : data?.bid
+        ? parseFloat(data.bid)
+        : data?.price
+        ? parseFloat(data.price)
+        : data?.ask
+        ? parseFloat(data.ask)
+        : undefined;
+
+      const prevUSD = prevPricesState[key];
+
+      let changePercent = null;
+      if (data?.change !== undefined && data?.change !== null) {
+        changePercent = parseFloat(data.change);
+      } else if (data?.chg !== undefined && data?.chg !== null) {
+        changePercent = parseFloat(data.chg);
+      } else if (data?.changePercent !== undefined && data?.changePercent !== null) {
+        changePercent = parseFloat(data.changePercent);
+      } else if (data?.ch !== undefined && data?.ch !== null) {
+        changePercent = parseFloat(data.ch);
+      } else if (
+        priceUSD !== undefined &&
+        prevUSD !== undefined &&
+        prevUSD !== 0
+      ) {
+        changePercent = ((priceUSD - prevUSD) / prevUSD) * 100;
+      }
+
+      let isUp = false;
+      let isNeutral = true;
+
+      if (changePercent !== null && !isNaN(changePercent)) {
+        isUp = changePercent > 0;
+        isNeutral = changePercent === 0;
+      } else if (data?.isUp !== undefined) {
+        isUp = Boolean(data.isUp);
+        isNeutral = false;
+      }
+
+      return {
+        key,
+        name,
+        price: formatPrice(priceUSD, decimals),
+        change: formatChange(changePercent),
+        isUp,
+        isNeutral,
+        rawPrice: priceUSD,
+      };
+    })
+    .filter(Boolean);
+
+  if (!selectedStockCommodities.length) return null;
+
+  const shouldLoop = rows.length > 5;
+  const slidesPerView = Math.min(5, rows.length);
 
   return (
     <PanelContainer>
-      <TableHeader title="COMMODITY" />
+      <TableHeader />
       <Box sx={{ mt: "0.4vw" }}>
-        {COMMODITY_CONFIG.map((c) => {
-          const item = rates[c.id];
-          if (!item) return null;
-
-          return (
-            <TableRow
-              key={c.id}
-              icon={renderIcon(c.id)}
-              name={c.name}
-              price={formatPrice(item.price, c.formatDecimals)}
-              change={formatChange(item.change, item.isNeutral)}
-              isUp={item.isUp}
-              isNeutral={item.isNeutral}
-              rawPrice={item.price}
-            />
-          );
-        })}
-      </Box>
-
-      {/* Sync Status / Diagnostic labels */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "auto",
-          width: "20px",
-          aspectRatio: "1/1",
-          background: "rgba(231 188 45 / 0.26)",
-          opacity: 0.65,
-          position: "absolute",
-          right: "0",
-          top: "0",
-          borderRadius: "0 0 0 10px",
-        }}
-      >
-        {fetchError ? (
-          <Typography
-            sx={{ fontSize: "0.75vw", color: "#FF0040", fontWeight: 500 }}
+        {rows.length === 0 ? (
+          <Box
+            sx={{
+              py: "2vw",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            ●
-          </Typography>
+            <Typography
+              sx={{ color: "#BAC8D9", fontSize: "1.2vw", fontWeight: 500 }}
+            >
+              Loading Commodity Rates...
+            </Typography>
+          </Box>
         ) : (
-          <Typography
-            sx={{ fontSize: "0.75vw", color: "#85E374", fontWeight: 500 }}
+          <Swiper
+            key={`swiper-${rows.length}`}
+            direction="vertical"
+            slidesPerView={slidesPerView}
+            loop={shouldLoop}
+            modules={shouldLoop ? [Autoplay] : []}
+            autoplay={
+              shouldLoop
+                ? {
+                    delay: 0,
+                    disableOnInteraction: false,
+                  }
+                : false
+            }
+            speed={3000}
+            style={{
+              height: isMobile ? "35vw" : "20vw",
+              background: "transparent",
+              overflow: "hidden",
+            }}
           >
-            ●
-          </Typography>
+            {rows.map((row, index) => (
+              <SwiperSlide key={row.key || index}>
+                <TableRow
+                  name={row.name}
+                  price={row.price}
+                  change={row.change}
+                  isUp={row.isUp}
+                  isNeutral={row.isNeutral}
+                  rawPrice={row.rawPrice}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         )}
       </Box>
     </PanelContainer>
   );
 };
 
-export default StockCommodity;
+export default StockCommodityTable;
