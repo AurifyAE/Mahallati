@@ -9,31 +9,15 @@ import { Route, Routes } from "react-router-dom";
  
 
 function App() {
-  const [isTvScreen, setIsTvScreen] = useState(window.innerWidth >= 1024);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTvScreen(window.innerWidth >= 1024);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <SpotRateProvider>
       <MarketDataProvider>
-        {!isTvScreen ? (
-          <ErrorPage />
-        ) : (
-          <Routes>
-            <Route path="/" element={<TvScreen />} />
-            <Route path="*" element={<ErrorPage />} />
-         
-          </Routes>
-        )}
+        <Routes>
+          <Route path="/" element={<TvScreen />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
       </MarketDataProvider>
     </SpotRateProvider>
   );

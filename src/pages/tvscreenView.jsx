@@ -18,7 +18,9 @@ import SystemClock from "../components/SystemClock";
 import WorldClockHorizontal from "../components/WorldClock";
 import CurrencyTable from "../components/CurrencyTable";
 import CommodityTable from "../components/CommodityTable";
-import StockCommodityTable, { getStockCommoditySocketSymbols } from "../components/StockCommodity";
+import StockCommodityTable, {
+  getStockCommoditySocketSymbols,
+} from "../components/StockCommodity";
 
 function TvScreen() {
   const [showLimitModal, setShowLimitModal] = useState(false);
@@ -65,19 +67,20 @@ function TvScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [spotRatesRes, serverURLRes, newsRes, stockCommoditiesRes] = await Promise.all([
-          fetchSpotRates(adminId),
-          fetchServerURL(),
-          fetchNews(adminId),
-          fetchStockCommodities(adminId),
-        ]);
+        const [spotRatesRes, serverURLRes, newsRes, stockCommoditiesRes] =
+          await Promise.all([
+            fetchSpotRates(adminId),
+            fetchServerURL(),
+            fetchNews(adminId),
+            fetchStockCommodities(adminId),
+          ]);
 
         // Handle Spot Rates
         const {
           commodities,
           goldBidSpread,
           goldAskSpread,
-          silverBidSpread,  
+          silverBidSpread,
           silverAskSpread,
         } = spotRatesRes.data.info;
         setCommodities(commodities);
@@ -95,7 +98,9 @@ function TvScreen() {
 
         // Handle Stock Commodities
         if (stockCommoditiesRes?.data?.success) {
-          setSelectedStockCommodities(stockCommoditiesRes.data.selectedStockCommodities || []);
+          setSelectedStockCommodities(
+            stockCommoditiesRes.data.selectedStockCommodities || [],
+          );
         }
       } catch (error) {
         setError("An error occurred while fetching data");
@@ -125,7 +130,9 @@ function TvScreen() {
   // When selectedStockCommodities change, add their socket symbols to the subscription
   useEffect(() => {
     if (selectedStockCommodities.length > 0) {
-      const stockSymbols = getStockCommoditySocketSymbols(selectedStockCommodities);
+      const stockSymbols = getStockCommoditySocketSymbols(
+        selectedStockCommodities,
+      );
       setSymbols((prev) => {
         const merged = [...new Set([...prev, ...stockSymbols])];
         return merged;
@@ -304,7 +311,13 @@ function TvScreen() {
           <SpotRate />
         </Grid>
         {/* Side: SpotRate & Date Time */}
-        <Grid xs={12} md={6} padding="1vw" gap="1.5vw" display="grid">
+        <Grid
+          xs={12}
+          md={6}
+          padding="1vw"
+          gap="1.5vw"
+          display="grid"
+        >
           {/* Header Row: Date & World Clocks side-by-side */}
           <Box
             sx={{
@@ -314,13 +327,15 @@ function TvScreen() {
               flexDirection: "column",
               width: "100%",
               gap: "1vw",
+              margin: { xs: '2vw 0', md: '0 0' }
+
             }}
           >
             <Box
               sx={{
                 height: "auto",
                 width: { xs: "40vw", sm: "25vw" },
-                marginBottom: { xs: "20px", sm: "0vw" },
+                marginBottom: { xs: "5px", sm: "0vw" },
               }}
             >
               <img src={mainLogo} alt="" className="object-contain w-full" />

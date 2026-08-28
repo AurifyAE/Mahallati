@@ -74,9 +74,9 @@ const SystemClock = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          // gap: "1vw",
+          gap: { xs: "6px", sm: "0" },
           width: "100%",
-          padding: "0vw 2.5vw",
+          padding: { xs: "8px 0", sm: "0vw 2.5vw" },
           borderRadius: "20px",
           flexDirection: "column",
         }}
@@ -85,12 +85,12 @@ const SystemClock = () => {
         <Typography
           sx={{
             fontSize: {
-              xs: "12px",
-              sm: "1vw",
+              xs: "14px",
+              sm: "1.2vw",
             },
             color: "#BAC8D9", // Platinum Silver
             letterSpacing: "2px",
-            fontWeight: 500,
+            fontWeight: 600,
           }}
         >
           {timeData.day || "-----"}
@@ -99,10 +99,10 @@ const SystemClock = () => {
         <Typography
           sx={{
             fontSize: {
-              xs: "12px",
+              xs: "18px",
               sm: "2vw",
             },
-            fontWeight: 600,
+            fontWeight: 700,
             letterSpacing: "2px",
             color: "#E5C583", // Champagne Gold
           }}

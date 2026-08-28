@@ -39,8 +39,8 @@ const ArrowUp = ({ color }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     sx={{
-      width: { xs: "12px", md: "1.2vw" },
-      height: { xs: "12px", md: "1.2vw" },
+      width: { xs: "14px", md: "1.2vw" },
+      height: { xs: "14px", md: "1.2vw" },
       flexShrink: 0,
     }}
   >
@@ -61,8 +61,8 @@ const ArrowDown = ({ color }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     sx={{
-      width: { xs: "12px", md: "1.2vw" },
-      height: { xs: "12px", md: "1.2vw" },
+      width: { xs: "14px", md: "1.2vw" },
+      height: { xs: "14px", md: "1.2vw" },
       flexShrink: 0,
     }}
   >
@@ -82,11 +82,11 @@ const PanelContainer = ({ children }) => (
   <Box
     sx={{
       width: "100%",
-      borderRadius: "1.5vw",
+      borderRadius: { xs: "16px", md: "1.5vw" },
       background: "rgba(6, 18, 14, 0.65)",
       backdropFilter: "blur(8px)",
-      boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.4)",
-      padding: "0.5vw 1.2vw 1.2vw 1.2vw",
+      boxShadow: { xs: "0 4px 16px rgba(0, 0, 0, 0.4)", md: "0 0.8vw 2vw rgba(0, 0, 0, 0.4)" },
+      padding: { xs: "12px 16px 16px 16px", md: "0.5vw 1.2vw 1.2vw 1.2vw" },
       overflow: "hidden",
       position: "relative",
       "&::before": {
@@ -123,16 +123,16 @@ const TableHeader = () => (
   <Box
     sx={{
       display: "grid",
-      gridTemplateColumns: "1.8fr 1.1fr 1.1fr",
-      py: "0.8vw",
-      px: "1.2vw",
+      gridTemplateColumns: { xs: "1.6fr 1fr 1.1fr", md: "1.8fr 1.1fr 1.1fr" },
+      py: { xs: "12px", md: "0.8vw" },
+      px: { xs: "4px", md: "1.2vw" },
       alignItems: "center",
       borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
     }}
   >
     <Typography
       sx={{
-        fontSize: { xs: "12px", md: "1.05vw" },
+        fontSize: { xs: "11px", sm: "12px", md: "1.05vw" },
         fontWeight: 600,
         color: "#BAC8D9",
         letterSpacing: "0.05em",
@@ -144,7 +144,7 @@ const TableHeader = () => (
 
     <Typography
       sx={{
-        fontSize: { xs: "12px", md: "1.05vw" },
+        fontSize: { xs: "11px", sm: "12px", md: "1.05vw" },
         fontWeight: 600,
         color: "#BAC8D9",
         letterSpacing: "0.05em",
@@ -156,12 +156,12 @@ const TableHeader = () => (
 
     <Typography
       sx={{
-        fontSize: { xs: "12px", md: "1.05vw" },
+        fontSize: { xs: "11px", sm: "12px", md: "1.05vw" },
         fontWeight: 600,
         color: "#BAC8D9",
         letterSpacing: "0.05em",
         textAlign: "right",
-        pr: "1.5vw",
+        pr: { xs: "4px", md: "1.5vw" },
       }}
     >
       CHANGE
@@ -179,10 +179,10 @@ const TableRow = ({ name, price, change, isUp, isNeutral }) => {
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "1.8fr 1.1fr 1.1fr",
+        gridTemplateColumns: { xs: "1.6fr 1fr 1.1fr", md: "1.8fr 1.1fr 1.1fr" },
         alignItems: "center",
-        py: "0.75vw",
-        px: "1.2vw",
+        py: { xs: "14px", md: "0.75vw" },
+        px: { xs: "4px", md: "1.2vw" },
         borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
         "&:last-child": {
           borderBottom: "none",
@@ -192,7 +192,7 @@ const TableRow = ({ name, price, change, isUp, isNeutral }) => {
       {/* Column 1: Commodity Name */}
       <Typography
         sx={{
-          fontSize: { xs: "13px", md: "1.3vw" },
+          fontSize: { xs: "14px", sm: "15px", md: "1.3vw" },
           fontWeight: 600,
           color: "#EAEFF5",
           letterSpacing: "0.02em",
@@ -205,7 +205,7 @@ const TableRow = ({ name, price, change, isUp, isNeutral }) => {
       {/* Column 2: Price */}
       <Typography
         sx={{
-          fontSize: { xs: "13px", md: "1.4vw" },
+          fontSize: { xs: "14px", sm: "15px", md: "1.4vw" },
           fontWeight: 700,
           color: "#ffffff",
           textAlign: "center",
@@ -221,13 +221,13 @@ const TableRow = ({ name, price, change, isUp, isNeutral }) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-end",
-          gap: "0.6vw",
-          pr: "0.5vw",
+          gap: { xs: "4px", md: "0.6vw" },
+          pr: { xs: "2px", md: "0.5vw" },
         }}
       >
         <Typography
           sx={{
-            fontSize: { xs: "13px", md: "1.4vw" },
+            fontSize: { xs: "14px", sm: "15px", md: "1.4vw" },
             fontWeight: 700,
             color: changeColor,
             fontVariantNumeric: "tabular-nums",
@@ -433,7 +433,7 @@ const StockCommodityTable = ({
             }
             speed={3000}
             style={{
-              height: isMobile ? "35vw" : "20vw",
+              height: isMobile ? "240px" : "20vw",
               background: "transparent",
               overflow: "hidden",
             }}
