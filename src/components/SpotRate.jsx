@@ -124,9 +124,9 @@ const SpotRate = () => {
             textAlign: "center",
             bgcolor: bgColor,
             border: border,
-            borderRadius: "1vw",
-            py: "0.8vw",
-            px: "1.1vw",
+            borderRadius: { xs: "8px", md: "1vw" },
+            py: { xs: "8px", md: "0.8vw" },
+            px: { xs: "8px", md: "1.1vw" },
             boxShadow: "inset 0 0 1vw rgba(0, 0, 0, 0.3)",
             transition: "all 0.4s ease",
             ...(hasPulse && {
@@ -189,7 +189,7 @@ const SpotRate = () => {
         sx={{
           position: "relative",
           overflow: "hidden",
-          borderRadius: "1.8vw",
+          borderRadius: { xs: "15px", md: "1.8vw" },
           backdropFilter: "blur(0.8vw)",
           background: panelBg,
           boxShadow: "0 0.8vw 2vw rgba(0, 0, 0, 0.5)",
@@ -199,8 +199,8 @@ const SpotRate = () => {
           },
           display: "grid",
           alignItems: "center",
-          gap: isSilver?"0.8vw":".2vw .8vw",
-          gridTemplateColumns: isSilver ? '.8fr 1fr 1fr' : "1fr 1fr",
+          gap: { xs: "12px 8px", md: isSilver ? "0.8vw" : ".2vw .8vw" },
+          gridTemplateColumns: { xs: "1fr 1fr", md: isSilver ? '.8fr 1fr 1fr' : "1fr 1fr" },
           "&::before": {
             content: '""',
             position: "absolute",
@@ -234,20 +234,21 @@ const SpotRate = () => {
       >
         <Box
           sx={{
-            gridColumn: isSilver ? "span 1" : "span 2",
+            gridColumn: { xs: "span 2", md: isSilver ? "span 1" : "span 2" },
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection:isSilver ? "column":"row",
-            gap: "0.5vw",
+            flexDirection: { xs: "row", md: isSilver ? "column" : "row" },
+            gap: { xs: "8px", md: "0.5vw" },
             width: "100%",
+            mb: { xs: "4px", md: "0" },
           }}
         >
           <Box
             className="animate-float"
             sx={{
-              width: isSilver?"4vw":"6vw",
-              height: isSilver?"4vw":"6vw",
+              width: { xs: "40px", md: isSilver ? "4vw" : "6vw" },
+              height: { xs: "40px", md: isSilver ? "4vw" : "6vw" },
               objectFit: "contain",
               filter: "drop-shadow(0 0.4vw 0.8vw rgba(0,0,0,0.4))",
             }}
@@ -258,7 +259,7 @@ const SpotRate = () => {
 
           <Box
             sx={{
-              fontSize: { xs: "16px", md: isSilver ?"2vw" :"2.8vw" },
+              fontSize: { xs: "18px", md: isSilver ? "2vw" : "2.8vw" },
               fontWeight: 700,
               letterSpacing: "0.1em",
               color: isSilver ? "#BAC8D9" : "#E5C583",
